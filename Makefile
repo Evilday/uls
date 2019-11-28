@@ -20,7 +20,7 @@ OBJO = ./obj/*.o
 	#./obj/main.o \
 	#./obj/mx_check_errors_2.o
 
-CFLGS = -std=c11 -Wall -Wextra -Wpedantic -Werror
+CFLGS = -std=c11
 
 all: install uninstall
 

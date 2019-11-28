@@ -19,6 +19,7 @@ short mx_digits_num(long long num);
 void mx_swap_str(char **s1, char **s2);
 char *mx_strncat(char *restrict s1, const char *restrict s2, int len);
 int mx_atoi(const char *str);
+void mx_printerr(const char *s);
 
 // Utils pack
 void mx_printchar(char c);
