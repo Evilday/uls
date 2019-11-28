@@ -18,7 +18,6 @@ static t_info *info_start(int argc, char **argv) {
 
 int main(int argc, char *argv[]) {
 	t_info *info = info_start(argc - 1, &(argv[1])); // sending without file_name
-	
 	printf("===========What inside==========\n");
 	for (int i = 0; i < info->argc; i++)
 		printf("i = %d - %s\n", info->exist[i], info->argv[i]);
