@@ -1,47 +1,5 @@
 #include "uls.h"
 
-bool mx_check_flags(t_info *info, int i) {
-	//printf("start\n");
-
-	char all_flags[2] = "l\0";
-
-	if (info->argv[i][0] == '-') {
-		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
-			//printf("found --\n");
-			return 0;
-		}
-		info->flags_exist = 1;
-		for (int j = 1; info->argv[i][j]; j++) {
-			if (!mx_strchr(all_flags, info->argv[i][j])) {
-				mx_invalid_usage();
-				exit(0);
-			}
-		}
-		return 1;
-	}
-	else {
-		printf("go to argv\n");
-		mx_check_argv(info, i);
-	}
-	return 0;
-}
-
-// bool mx_check_argv(t_info *info, int i) {
-// 	DIR *f = opendir(".");
-// 	struct dirent *d;
-
-// 	while((d = readdir(f))) {
-// 		if (!mx_strcmp(d->d_name, info->argv[i])) {
-// 			info->args_exist = 1;
-// 			closedir(f);
-// 			return 1;
-// 		}
-// 	}
-// 	closedir(f);
-// 	info->exist[i] = 0;
-// 	return 0;
-// }
-
 static char *up_to_one(char *str) {
 	int pos = mx_strlen(str) - 1;
 
@@ -89,5 +47,28 @@ bool mx_check_argv(t_info *info, int i) {
 		free(file);
 	}
 	info->exist[i] = 0;
+	return 0;
+}
+
+bool mx_check_flags(t_info *info, int i) {
+	char all_flags[2] = "l\0";
+
+	if (info->argv[i][0] == '-') {
+		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
+			return 0;
+		}
+		info->flags_exist = 1;
+		for (int j = 1; info->argv[i][j]; j++) {
+			if (!mx_strchr(all_flags, info->argv[i][j])) {
+				mx_invalid_usage();
+				exit(0);
+			}
+		}
+		return 1;
+	}
+	else {
+		//printf("go to argv\n");
+		mx_check_argv(info, i);
+	}
 	return 0;
 }
