@@ -40,9 +40,9 @@ void mx_start(t_info *info) {
 
 		printf("=====================\n");
 
-		// mx_work_with_args(info);
-		// if (info->flags_exist)
-		// 	mx_work_with_flags(info);
+		mx_work_with_args(info);
+		if (info->flags_exist)
+			mx_work_with_flags(info);
 
 		mx_sort_args(info);
 
@@ -93,10 +93,10 @@ void mx_start(t_info *info) {
 		// 	printf("\n");
 		// }
 
-		// printf("=====================\n");
-		// for (int i = 0; i < info->argc; i++)
-			// printf("argv[%d] = %s\n", i, info->argv[i]);
-		// printf("=====================\n");
+		printf("=====================\n");
+		for (int i = 0; i < info->argc; i++)
+			printf("argv[%d] = %s\n", i, info->argv[i]);
+		printf("=====================\n");
 	}
 }
 
