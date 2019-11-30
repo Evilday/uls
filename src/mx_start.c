@@ -2,7 +2,7 @@
 
 static bool check_basic_errors(t_info *info) {
 	bool flags = 1;
-	for (int i = 0; info->argv[i]; i++) {
+	for (int i = 0; i < info->argc; i++) {
 		if (flags) {
 			//printf("if\n");
 			if (!mx_check_flags(info, i))
@@ -18,33 +18,26 @@ static bool check_basic_errors(t_info *info) {
 
 void mx_start(t_info *info) {
 	if (check_basic_errors(info)) {
+		// just for look
 		for (int i = info->argc - 1; i > 0; i--) {
-			if (!info->exist[i])
+			if (!info->where_what[i])
 				mx_arg_not_exist(info->argv[i]);
 		}
-
 		printf("======Info flags and args=======\n");
 		printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
 
-		// printf("===========Valid. info===========\n");
-		// for (int i = 0; i < info->argc; i++) {
-		// 	if (info->exist[i])
-		// 		printf("Exist = %d - %s\n", info->exist[i], info->argv[i]);
-		// 	else
-		// 		printf("Not exist = %d - %s\n", info->exist[i], info->argv[i]);
-		// }
-		// printf("=================================\n");
+		printf("================================\n");
+		// End
 
-		for (int i = 0; i < info->argc; i++)
-			printf("argv[%d] = %s\n", i, info->argv[i]);
-
-		printf("=====================\n");
-
-		mx_work_with_args(info);
-		if (info->flags_exist)
-			mx_work_with_flags(info);
 
 		mx_sort_args(info);
+		mx_work_with_args(info);
+		
+		// for (int i = 0; i < info->argc; i++)
+		// 	printf("%d", info->where_what[i]);
+		// printf("\n");
+		
+		// printf("all_our_flags = %s\n", info->all_our_flags);
 
 		// struct stat buff;
 
@@ -69,14 +62,23 @@ void mx_start(t_info *info) {
 
 		printf("===============\n");
 
-		// DIR *f = opendir(info->argv[0]);
-		// struct dirent *d;
+		// mx_num_of_cols(info);
+
+		// acl_t acl = NULL;
+		// acl = acl_get_file(info->argv[0], ACL_TYPE_ACCESS);
+		// ssize_t size = 200;
+		// char *str = acl_to_text(acl, NULL);
+		// printf("acl_to_text = %s\n", str);
+
+		//DIR *f = opendir(".");
+		//struct dirent *d;
 		// if (f != 0) {
-		// 	d = readdir(f);
+		//d = readdir(f);
 		// 	while ((d = readdir(f)))
 		// 		printf("%s\n", d->d_name);
 		// }
 		// struct stat fileStat;
+		//printf("%s", (getgrnam(d->d_name)));
 
 		// for (int i = 0; stat(info->argv[i], &fileStat) >= 0; i++) {
 		// 	printf("File Permissions : \t");
@@ -93,10 +95,11 @@ void mx_start(t_info *info) {
 		// 	printf("\n");
 		// }
 
-		printf("=====================\n");
-		for (int i = 0; i < info->argc; i++)
-			printf("argv[%d] = %s\n", i, info->argv[i]);
-		printf("=====================\n");
+
+		// printf("=====================\n");
+		// for (int i = 0; i < info->argc; i++)
+		// 	printf("argv[%d] = %s\n", i, info->argv[i]);
+		// printf("=====================\n");
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "uls.h"
 
-static char *up_to_one(char *str) {
+char *mx_up_to_one(char *str) {
 	int pos = mx_strlen(str) - 1;
 
 	while (str[pos] != *str && str[pos] != '/')
@@ -24,6 +24,7 @@ static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
 				return 1;
 			}
 	}
+	closedir(f);
 	return 0;
 }
 
@@ -33,20 +34,21 @@ bool mx_check_argv(t_info *info, int i) {
 	char *file;
 
 	if ((f = opendir(info->argv[i]))) {
-		info->args_exist = 1;
 		closedir(f);
+		info->args_exist = 1;
+		info->where_what[i] = 2;
 		return 1;
 	}
 	else {
-		file = up_to_one(info->argv[i]);
+		file = mx_up_to_one(info->argv[i]);
 		if (else_check_argv(info->argv[i], file, f, d)) {
 			free(file);
 			info->args_exist = 1;
+			info->where_what[i] = 2;
 			return 1;
 		}
 		free(file);
 	}
-	info->exist[i] = 0;
 	return 0;
 }
 
@@ -56,7 +58,7 @@ bool mx_check_flags(t_info *info, int i) {
 
 	if (info->argv[i][0] == '-') {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
-			//printf("found --\n");
+			info->where_what[i] = 3;
 			return 0;
 		}
 		info->flags_exist = 1;
@@ -66,6 +68,7 @@ bool mx_check_flags(t_info *info, int i) {
 				exit(0);
 			}
 		}
+		info->where_what[i] = 1;
 		return 1;
 	}
 	else {
