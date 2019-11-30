@@ -66,7 +66,8 @@ SRC = mx_digits_num.c \
 	mx_swap_str.c \
 	mx_atoi.c \
 	mx_isdigit.c \
-	mx_isalpha.c
+	mx_isalpha.c \
+	mx_printerr.c
 
 OBJ_DIR = ./obj/
 SRC_DIR = ./src/
