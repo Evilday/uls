@@ -2,12 +2,12 @@
 
 void mx_advanced_permissions_check(t_info *info) {
 	acl_t acl;
-	t_uni_list *tmp_access = info->access;
+	t_info_l *tmp_info_l = info->info_l;
 
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_access = tmp_access->next) {
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
 		acl = acl_get_file(tmp->data, ACL_TYPE_EXTENDED);
 		if (acl) {
-			mx_strcat(tmp_access->data, "+");
+			mx_strcat(tmp_info_l->access, "+");
 			acl_free(acl);
 		}
 	}
@@ -20,7 +20,7 @@ void mx_basic_permissions(t_info *info) {
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
 		stat(tmp->data, &fileStat);
-		str = mx_strnew(14);
+		str = mx_strnew(10);
 		str[j++] = S_ISDIR(fileStat.st_mode) ? 'd' : '-';
 		str[j++] = fileStat.st_mode & S_IRUSR ? 'r' : '-';
 		str[j++] = fileStat.st_mode & S_IWUSR ? 'w' : '-';
@@ -31,7 +31,7 @@ void mx_basic_permissions(t_info *info) {
 		str[j++] = fileStat.st_mode & S_IROTH ? 'r' : '-';
 		str[j++] = fileStat.st_mode & S_IWOTH ? 'w' : '-';
 		str[j++] = fileStat.st_mode & S_IXOTH ? 'x' : '-';
-		mx_push_uni_list_back(&(info->access), str);
+		mx_push_info_l_back(&(info->info_l), str);
 		free(str);
 		j = 0;
 	}
@@ -56,10 +56,11 @@ void mx_take_flags(t_info *info) {
 }
 
 void mx_work_with_flags(t_info *info) {
-	printf("FLAGS exist\n");
-	for (int i = 0; info->all_our_flags[i]; i++)
-		if (info->all_our_flags[i] == 'l')
+	for (int i = 0; info->all_our_flags[i]; i++) {
+		if (info->all_our_flags[i] == 'l') {
 			mx_l_flag(info);
+		}
+	}
 }
 
 // stat - Функция stat() вносит в структуру, на которую указывает statbuf,

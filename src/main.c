@@ -10,7 +10,7 @@ static t_info *info_start(int argc, char **argv) {
 	info->where_what = (int *)malloc(sizeof(int) * argc);
 	info->all_our_flags = NULL;
 	info->sub_args = NULL;
-	info->access = NULL;
+	info->info_l = NULL;
 
 	for (int i = 0; i < argc; i++)
 		info->where_what[i] = 0;

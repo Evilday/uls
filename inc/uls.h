@@ -24,6 +24,16 @@ typedef struct s_uni_list {
 	struct s_uni_list *next;
 } t_uni_list;
 
+typedef struct s_info_l {
+	char *access; // доступ до файлів
+	int nlink;
+	int login;
+	int group_owner;
+	int sym_num;
+	int time_upd;
+	struct s_info_l *next;
+} t_info_l;
+
 typedef struct s_info {
 	int argc;
 	char **argv;
@@ -36,7 +46,7 @@ typedef struct s_info {
 	char *all_our_flags; // список всіх наших флагів, які нам прийшли
 	
 	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
-	struct s_uni_list *access; // доступ до файлів
+	struct s_info_l *info_l; // всі данні для роботи з l флагом
 } t_info;
 
 // mx_check_errors
@@ -70,5 +80,8 @@ int mx_num_of_cols(t_info *info);
 t_uni_list *mx_create_uni_list(char *data);
 void mx_push_uni_list_back(t_uni_list **list, void *data);
 void mx_pop_uni_list_front(t_uni_list **head);
+t_info_l *mx_create_info_l(char *data);
+void mx_push_info_l_back(t_info_l **list, char *data);
+void mx_pop_info_l_front(t_info_l **head);
 
 #endif
