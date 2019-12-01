@@ -17,6 +17,22 @@ void mx_sort_args(t_info *info) {
 	}
 }
 
+void mx_sort_uni_list(t_uni_list *lst) {
+	char *temp;
+
+	if (lst)
+		for (t_uni_list *temp1 = lst; temp1; temp1 = temp1->next)
+			for (t_uni_list *temp2 = lst; temp2->next; temp2 = temp2->next)
+				if(mx_strcmp(temp2->data, temp2->next->data) > 0) {
+					temp = temp2->data;
+					temp2->data = temp2->next->data;
+					temp2->next->data = temp;
+					temp = temp2->path;
+					temp2->path = temp2->next->path;
+					temp2->next->path = temp;
+				}
+}
+
 static void default_args(t_info *info) {
 	// int num_of_elems = 0;
 	// char **all_elems;
@@ -47,65 +63,9 @@ static void default_args(t_info *info) {
 	info->argv = all_elems;
 }
 
-static bool else_look_sub_argv(t_info *info, char *file, int i) {
-	DIR *f;
-	struct dirent *d;
-
-	if ((f = opendir(file))) {
-		while((d = readdir(f)))
-			if (d->d_name[0] != '.')
-				mx_push_uni_list_back(&(info->sub_args), d->d_name);
-			closedir(f);
-			return 1;
-	}
-	else {
-		mx_push_uni_list_back(&(info->sub_args), info->argv[i]);
-		return 1;
-	}
-	return 0;
-}
-
-bool mx_look_sub_argv(t_info *info, int i) {
-	DIR *f;
-	struct dirent *d;
-	char *file;
-
-	if ((f = opendir(info->argv[i]))) {
-		while ((d = readdir(f))) {
-			if (d->d_name[0] != '.')
-				mx_push_uni_list_back(&(info->sub_args), d->d_name);
-		}
-		closedir(f);
-		return 1;
-	}
-	else {
-		file = mx_up_to_one(info->argv[i]);
-		if (else_look_sub_argv(info, file, i)) {
-			free(file);
-			return 1;
-		}
-		free(file);
-	}
-	return 0;
-}
-
-void mx_print_arg(t_info *info) {
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		mx_printstr(tmp->data);
-		mx_printchar('\n');
-	}
-	mx_printchar('\n');
-	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next)
-		printf("%s\n", tmp->access);
-	printf("\n");
-}
-
-// void mx_file_or_folder() {
-	
-// }
-
 void mx_work_with_one_arg(t_info *info, int i) {
 	mx_look_sub_argv(info, i);
+	mx_sort_uni_list(info->sub_args);
 	if (info->flags_exist)
 		mx_work_with_flags(info);
 	mx_print_arg(info);
@@ -116,10 +76,11 @@ void mx_work_with_one_arg(t_info *info, int i) {
 }
 
 void mx_work_with_args(t_info *info) {
+	mx_arg_not_exist(info);
 	if (info->flags_exist)
 		mx_take_flags(info);
 	if (info->args_exist) {
-		printf("Args exist !\n");
+		// printf("Args exist !\n");
 		for (int i = 0; i < info->argc; i++) {
 			if (info->where_what[i] == 2) {
 				mx_work_with_one_arg(info, i);
@@ -127,6 +88,9 @@ void mx_work_with_args(t_info *info) {
 		}
 	}
 	else {
+		for (int i = 0; i < info->argc; i++)
+			if (!info->where_what[i])
+				return;
 		default_args(info);
 		mx_work_with_one_arg(info, 0);
 	}

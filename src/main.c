@@ -11,6 +11,9 @@ static t_info *info_start(int argc, char **argv) {
 	info->all_our_flags = NULL;
 	info->sub_args = NULL;
 	info->info_l = NULL;
+	info->flag_a = 0;
+	info->flag_A = 0;
+	info->flag_l = 0;
 
 	for (int i = 0; i < argc; i++)
 		info->where_what[i] = 0;

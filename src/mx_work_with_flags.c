@@ -37,20 +37,63 @@ void mx_basic_permissions(t_info *info) {
 	}
 }
 
+void mx_group_size_date_for_l(t_info *info) {
+	struct stat buff;
+	//char *time_info;
+	t_uni_list *tmp2 = info->sub_args;
+
+	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
+		stat(tmp2->path, &buff);
+		tmp->nlink = buff.st_nlink;
+		tmp->group_owner = buff.st_gid;
+		// printf("-----------\n");
+		// printf("%llu\t", buff.st_ino);
+		// printf("%hu\t", buff.st_mode);
+		// printf("%hu\t", buff.st_nlink);
+		// printf("%u\t", buff.st_uid);
+		// printf("%u\t", buff.st_gid);
+		// printf("%d\t", buff.st_rdev);
+		// printf("%lld\t", buff.st_size);
+		// printf("%d\t", buff.st_blksize);
+		// printf("%lld\t", buff.st_blocks);
+		// printf("%ld\t", buff.st_atime);
+		// printf("%ld\t", buff.st_mtime);
+		// printf("%ld\t\n", buff.st_ctime);
+		// printf("-----------\n");
+		tmp->sym_num = buff.st_size;
+		
+		//time_info = 
+		tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
+		tmp2 = tmp2->next;
+		//free(time_info);
+	}
+}
+
 void mx_l_flag(t_info *info) {
 	mx_basic_permissions(info);
 	mx_advanced_permissions_check(info);
+	mx_group_size_date_for_l(info);
 }
 
 void mx_take_flags(t_info *info) {
 	char *our_flags = mx_strnew(37);
+	char *pos;
 
 	for (int i = 0; i < info->argc; i++) {
 		if (info->where_what[i] == 1) {
-			for (int j = 1; info->argv[i][j]; j++)
-				if (!mx_strchr(our_flags, info->argv[i][j]))
-					our_flags[mx_strlen(our_flags)] = (info->argv[i][j]);
+			for (int j = 1; info->argv[i][j]; j++) {
+				for (int p = 0; our_flags[p]; p++)
+					if (our_flags[p] == info->argv[i][j])
+						our_flags[p] = '0';
+						our_flags[mx_strlen(our_flags)] = (info->argv[i][j]);
+			}
 		}
+	}
+	for (int i = 0; our_flags[i]; i++) {
+		if (our_flags[i] == 'a')
+			info->flag_a = 1;
+		else if (our_flags[i] == 'A')
+			info->flag_A = 1;
 	}
 	info->all_our_flags = our_flags;
 }
@@ -58,6 +101,7 @@ void mx_take_flags(t_info *info) {
 void mx_work_with_flags(t_info *info) {
 	for (int i = 0; info->all_our_flags[i]; i++) {
 		if (info->all_our_flags[i] == 'l') {
+			info->flag_l = 1;
 			mx_l_flag(info);
 		}
 	}

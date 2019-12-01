@@ -19,10 +19,6 @@ static bool check_basic_errors(t_info *info) {
 void mx_start(t_info *info) {
 	if (check_basic_errors(info)) {
 		// just for look
-		for (int i = info->argc - 1; i > 0; i--) {
-			if (!info->where_what[i])
-				mx_arg_not_exist(info->argv[i]);
-		}
 		printf("======Info flags and args=======\n");
 		printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
 		printf("================================\n");
@@ -57,8 +53,6 @@ void mx_start(t_info *info) {
 		// printf("%s\n", info->argv[0]);
 
 		// test_time = buff.st_mtime;
-
-		printf("===============\n");
 
 		// mx_num_of_cols(info);
 

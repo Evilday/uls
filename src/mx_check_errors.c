@@ -53,9 +53,9 @@ bool mx_check_argv(t_info *info, int i) {
 }
 
 bool mx_check_flags(t_info *info, int i) {
-	char all_flags[2] = "l\0";
+	char all_flags[4] = "laA\0";
 
-	if (info->argv[i][0] == '-') {
+	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
 			info->where_what[i] = 3;
 			return 0;
@@ -70,9 +70,7 @@ bool mx_check_flags(t_info *info, int i) {
 		info->where_what[i] = 1;
 		return 1;
 	}
-	else {
-		//printf("go to argv\n");
+	else
 		mx_check_argv(info, i);
-	}
 	return 0;
 }
