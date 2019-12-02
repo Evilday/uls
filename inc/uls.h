@@ -19,6 +19,14 @@
 #include <pwd.h>
 #include <grp.h>
 
+typedef struct s_tabs_l {
+	int l_nlink;
+	int l_login;
+	int l_group_owner;
+	int l_sym_num;
+	int l_time_upd;
+} t_tabs_l;
+
 typedef struct s_uni_list {
 	char *data;
 	char *path;
@@ -27,10 +35,10 @@ typedef struct s_uni_list {
 
 typedef struct s_info_l {
 	char *access; // доступ до файлів
-	int nlink;
+	char *nlink;
 	char *login;
-	int group_owner;
-	int sym_num;
+	char *group_owner;
+	char *sym_num;
 	char *time_upd;
 	struct s_info_l *next;
 } t_info_l;
@@ -39,15 +47,19 @@ typedef struct s_info {
 	int argc;
 	char **argv;
 
-	bool flags_exist;
-	bool args_exist;
+	bool flags_exist; // чи є якісь флаги серез аргументів,  що поступили
+	bool args_exist; // чи є файл/папка серез аргументів, що поступили
 
 	int *where_what; // 0 - не валідна, 1 - флажок, 2 - агрумент
 
 	char *all_our_flags; // список всіх наших флагів, які нам прийшли
 
 	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
+	int num_of_sub; // кількість елементів в агрументі
+	int max_sub_len; // найдовше слово серед елементів аргумента
+
 	struct s_info_l *info_l; // всі данні для роботи з l флагом
+	struct s_tabs_l *tabs_l; // кількість пробілів для кожного елементу флага l при виводі
 
 	bool flag_a;
 	bool flag_A;

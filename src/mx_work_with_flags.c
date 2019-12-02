@@ -5,9 +5,9 @@ void mx_advanced_permissions_check(t_info *info) {
 	t_info_l *tmp_info_l = info->info_l;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
-		acl = acl_get_file(tmp->data, ACL_TYPE_EXTENDED);
+		acl = acl_get_file(tmp->path, ACL_TYPE_EXTENDED);
 		if (acl) {
-			mx_strcat(tmp_info_l->access, "+");
+			tmp_info_l->access[10] = '+';
 			acl_free(acl);
 		}
 	}
@@ -19,7 +19,7 @@ void mx_basic_permissions(t_info *info) {
 	int j = 0;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		stat(tmp->data, &fileStat);
+		stat(tmp->path, &fileStat);
 		str = mx_strnew(10);
 		str[j++] = S_ISDIR(fileStat.st_mode) ? 'd' : '-';
 		str[j++] = fileStat.st_mode & S_IRUSR ? 'r' : '-';
@@ -37,6 +37,12 @@ void mx_basic_permissions(t_info *info) {
 	}
 }
 
+static char *get_login(uid_t st_uid) {
+	struct passwd *pw = getpwuid(st_uid);
+
+	return pw->pw_name;
+}
+
 void mx_group_size_date_for_l(t_info *info) {
 	struct stat buff;
 	//char *time_info;
@@ -44,8 +50,9 @@ void mx_group_size_date_for_l(t_info *info) {
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
 		stat(tmp2->path, &buff);
-		tmp->nlink = buff.st_nlink;
-		tmp->group_owner = buff.st_gid;
+		tmp->nlink = mx_itoa(buff.st_nlink);
+		tmp->group_owner = mx_itoa(buff.st_gid);
+		tmp->login = get_login(buff.st_uid);
 		// printf("-----------\n");
 		// printf("%llu\t", buff.st_ino);
 		// printf("%hu\t", buff.st_mode);
@@ -60,7 +67,7 @@ void mx_group_size_date_for_l(t_info *info) {
 		// printf("%ld\t", buff.st_mtime);
 		// printf("%ld\t\n", buff.st_ctime);
 		// printf("-----------\n");
-		tmp->sym_num = buff.st_size;
+		tmp->sym_num = mx_itoa(buff.st_size);
 		
 		//time_info = 
 		tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
