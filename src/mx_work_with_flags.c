@@ -71,13 +71,14 @@ void mx_group_size_date_for_l(t_info *info) {
 		tmp->sym_num = mx_itoa(buff.st_size);
 		//time_info = 
 		if ((time(0) - buff.st_mtime) > (31536000 / 2)) {
-			printf("num of years %ld\n", 1970 + ((time(0) - (time(0) - buff.st_mtime)) / 31536000));
+			printf("num of years %ld\n", 1970 + (buff.st_mtime / 31536000));
 		}
 			tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
 		tmp2 = tmp2->next;
 		//free(time_info);
 	}
 }
+
 // printf("-----------\n");
 // printf("%llu\t", buff.st_ino);
 // printf("%hu\t", buff.st_mode);
