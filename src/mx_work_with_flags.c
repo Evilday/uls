@@ -10,6 +10,8 @@ void mx_advanced_permissions_check(t_info *info) {
 			tmp_info_l->access[10] = '+';
 			acl_free(acl);
 		}
+		if (listxattr(tmp->path, NULL, 0, XATTR_NOFOLLOW))
+			tmp_info_l->access[10] = '@';
 	}
 }
 
@@ -45,37 +47,51 @@ static char *get_login(uid_t st_uid) {
 
 void mx_group_size_date_for_l(t_info *info) {
 	struct stat buff;
-	//char *time_info;
 	t_uni_list *tmp2 = info->sub_args;
+	struct group *grp;
+	char buf[100];
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		stat(tmp2->path, &buff);
+		lstat(tmp2->path, &buff);
+		grp = getgrgid(buff.st_gid);
 		tmp->nlink = mx_itoa(buff.st_nlink);
-		tmp->group_owner = mx_itoa(buff.st_gid);
-		tmp->login = get_login(buff.st_uid);
-		// printf("-----------\n");
-		// printf("%llu\t", buff.st_ino);
-		// printf("%hu\t", buff.st_mode);
-		// printf("%hu\t", buff.st_nlink);
-		// printf("%u\t", buff.st_uid);
-		// printf("%u\t", buff.st_gid);
-		// printf("%d\t", buff.st_rdev);
-		// printf("%lld\t", buff.st_size);
-		// printf("%d\t", buff.st_blksize);
-		// printf("%lld\t", buff.st_blocks);
-		// printf("%ld\t", buff.st_atime);
-		// printf("%ld\t", buff.st_mtime);
-		// printf("%ld\t\n", buff.st_ctime);
-		// printf("-----------\n");
+		if (grp)
+			tmp->group_owner = mx_strdup(grp->gr_name);
+		else
+			tmp->group_owner = mx_itoa(buff.st_gid);
+		if (buff.st_uid)
+			tmp->login = get_login(buff.st_uid);
+		else
+			tmp->login = mx_strdup("root");
+		if (readlink(tmp2->path, buf, 100) > 0) {
+			tmp2->data = mx_realloc(tmp2->data, mx_strlen(buf) + mx_strlen(tmp2->data) + 4);
+			mx_strcat(tmp2->data, " -> ");
+			mx_strcat(tmp2->data, buf);
+		}
 		tmp->sym_num = mx_itoa(buff.st_size);
-		
 		//time_info = 
-		tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
+		if ((time(0) - buff.st_mtime) > (31536000 / 2)) {
+			printf("num of years %ld\n", 1970 + ((time(0) - (time(0) - buff.st_mtime)) / 31536000));
+		}
+			tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
 		tmp2 = tmp2->next;
 		//free(time_info);
 	}
 }
-
+// printf("-----------\n");
+// printf("%llu\t", buff.st_ino);
+// printf("%hu\t", buff.st_mode);
+// printf("%hu\t", buff.st_nlink);
+// printf("%u\t", buff.st_uid);
+// printf("%u\t", buff.st_gid);
+// printf("%d\t", buff.st_rdev);
+// printf("%lld\t", buff.st_size);
+// printf("%d\t", buff.st_blksize);
+// printf("%lld\t", buff.st_blocks);
+// printf("%ld\t", buff.st_atime);
+// printf("%ld\t", buff.st_mtime);
+// printf("%ld\t\n", buff.st_ctime);
+// printf("-----------\n");
 void mx_l_flag(t_info *info) {
 	mx_basic_permissions(info);
 	mx_advanced_permissions_check(info);
