@@ -19,9 +19,9 @@ static bool check_basic_errors(t_info *info) {
 void mx_start(t_info *info) {
 	if (check_basic_errors(info)) {
 		// just for look
-		printf("======Info flags and args=======\n");
-		printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
-		printf("================================\n");
+		// printf("======Info flags and args=======\n");
+		// printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
+		// printf("================================\n");
 		// End
 
 		mx_sort_args(info);

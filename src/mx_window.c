@@ -20,12 +20,9 @@ int mx_num_of_cols(t_info *info) {
 			max_len = mx_strlen(tmp->data);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	cols = (w.ws_col / ((8 - (max_len % 8)) + max_len));
-	//printf("size = %i\n", list_size(info->sub_args));
 	lines = list_size(info->sub_args) / cols;
-	if (lines == 0 || ((lines % cols) != 0))
-		lines++;
-	printf("num_of_cols = %i\n", cols);
-	printf("lines = %i\n", lines);
+		if (lines == 0 || ((list_size(info->sub_args) % cols) != 0))
+			lines++;
 	info->max_sub_len = max_len;
 	return lines;
 }

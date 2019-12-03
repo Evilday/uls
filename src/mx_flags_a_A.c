@@ -14,4 +14,5 @@ void mx_look_sub_argv_2(t_info *info, int i, DIR *f, struct dirent *d) {
 			++num_sub_args;
 		}
 	}
+	info->num_of_sub = num_sub_args;
 }

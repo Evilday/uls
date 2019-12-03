@@ -60,6 +60,7 @@ typedef struct s_info {
 
 	struct s_info_l *info_l; // всі данні для роботи з l флагом
 	struct s_tabs_l *tabs_l; // кількість пробілів для кожного елементу флага l при виводі
+	int total_blocks_l;
 
 	bool flag_a;
 	bool flag_A;

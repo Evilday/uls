@@ -21,7 +21,7 @@ void mx_basic_permissions(t_info *info) {
 	int j = 0;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		stat(tmp->path, &fileStat);
+		lstat(tmp->path, &fileStat);
 		str = mx_strnew(10);
 		str[j++] = S_ISDIR(fileStat.st_mode) ? 'd' : '-';
 		str[j++] = fileStat.st_mode & S_IRUSR ? 'r' : '-';
@@ -45,14 +45,40 @@ static char *get_login(uid_t st_uid) {
 	return pw->pw_name;
 }
 
-void mx_group_size_date_for_l(t_info *info) {
+void mx_date_time_for_l(t_info *info) {
 	struct stat buff;
 	t_uni_list *tmp2 = info->sub_args;
-	struct group *grp;
+	char *year;
 	char buf[100];
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
 		lstat(tmp2->path, &buff);
+		if (readlink(tmp2->path, buf, 100) > 0) {
+			tmp2->data = mx_realloc(tmp2->data
+			, mx_strlen(buf) + mx_strlen(tmp2->data) + 4);
+			mx_strcat(tmp2->data, " -> ");
+			mx_strcat(tmp2->data, buf);
+			tmp->access[0] = 'l';
+		}
+		tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
+		if ((time(0) - buff.st_mtime) > (31536000 / 2)) {
+			year = mx_itoa(1970 + (buff.st_mtime / 31536000));
+			mx_strcpy(&(tmp->time_upd[8]), year);
+			tmp->time_upd[7] = ' ';
+			free(year);
+		}
+		tmp2 = tmp2->next;
+	}
+}
+
+void mx_group_size_for_l(t_info *info) {
+	struct stat buff;
+	t_uni_list *tmp2 = info->sub_args;
+	struct group *grp;
+
+	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
+		lstat(tmp2->path, &buff);
+		info->total_blocks_l += buff.st_blocks;
 		grp = getgrgid(buff.st_gid);
 		tmp->nlink = mx_itoa(buff.st_nlink);
 		if (grp)
@@ -63,19 +89,8 @@ void mx_group_size_date_for_l(t_info *info) {
 			tmp->login = get_login(buff.st_uid);
 		else
 			tmp->login = mx_strdup("root");
-		if (readlink(tmp2->path, buf, 100) > 0) {
-			tmp2->data = mx_realloc(tmp2->data, mx_strlen(buf) + mx_strlen(tmp2->data) + 4);
-			mx_strcat(tmp2->data, " -> ");
-			mx_strcat(tmp2->data, buf);
-		}
 		tmp->sym_num = mx_itoa(buff.st_size);
-		//time_info = 
-		if ((time(0) - buff.st_mtime) > (31536000 / 2)) {
-			printf("num of years %ld\n", 1970 + (buff.st_mtime / 31536000));
-		}
-			tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
 		tmp2 = tmp2->next;
-		//free(time_info);
 	}
 }
 
@@ -96,12 +111,12 @@ void mx_group_size_date_for_l(t_info *info) {
 void mx_l_flag(t_info *info) {
 	mx_basic_permissions(info);
 	mx_advanced_permissions_check(info);
-	mx_group_size_date_for_l(info);
+	mx_group_size_for_l(info);
+	mx_date_time_for_l(info);
 }
 
 void mx_take_flags(t_info *info) {
 	char *our_flags = mx_strnew(37);
-	char *pos;
 
 	for (int i = 0; i < info->argc; i++) {
 		if (info->where_what[i] == 1) {
@@ -123,10 +138,15 @@ void mx_take_flags(t_info *info) {
 }
 
 void mx_work_with_flags(t_info *info) {
-	for (int i = 0; info->all_our_flags[i]; i++) {
+	for (int i = mx_strlen(info->all_our_flags); i >= 0; i--) {
 		if (info->all_our_flags[i] == 'l') {
 			info->flag_l = 1;
 			mx_l_flag(info);
+			break;
+		}
+		else if (info->all_our_flags[i] == '1') {
+			//
+			break;
 		}
 	}
 }

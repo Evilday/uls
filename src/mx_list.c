@@ -21,7 +21,6 @@ t_uni_list *mx_create_uni_list(char *data, char *path) {
 void mx_push_uni_list_back(t_uni_list **list, void *data, char *path) {
 	t_uni_list *new_uni_list = NULL;
 	t_uni_list *temp = *list;
-	int id = 0;
 
 	if (list && (new_uni_list = mx_create_uni_list(data, path)) != NULL) {
 		if (*list) {
@@ -72,7 +71,6 @@ t_info_l *mx_create_info_l(char *data) {
 void mx_push_info_l_back(t_info_l **list, char *data) {
 	t_info_l *new_info_l = NULL;
 	t_info_l *temp = *list;
-	int id = 0;
 
 	if (list && (new_info_l = mx_create_info_l(data)) != NULL) {
 		if (*list) {
@@ -93,8 +91,8 @@ void mx_pop_info_l_front(t_info_l **head) {
 		temp = *head;
 		mx_strdel(&(temp->access));
 		mx_strdel(&(temp->nlink));
-		// if (malloc_size(temp->login))
-		// 	mx_strdel(&(temp->login));
+		if (malloc_size(temp->login))
+			mx_strdel(&(temp->login));
 		mx_strdel(&(temp->group_owner));
 		mx_strdel(&(temp->sym_num));
 		mx_strdel(&(temp->time_upd));

@@ -30,7 +30,7 @@ static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
 
 bool mx_check_argv(t_info *info, int i) {
 	DIR *f;
-	struct dirent *d;
+	struct dirent *d = NULL;
 	char *file;
 
 	if ((f = opendir(info->argv[i]))) {
@@ -53,7 +53,7 @@ bool mx_check_argv(t_info *info, int i) {
 }
 
 bool mx_check_flags(t_info *info, int i) {
-	char all_flags[4] = "laA\0";
+	char all_flags[17] = "laARGh@eT1CrtucS\0";
 
 	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {

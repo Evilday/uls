@@ -17,19 +17,18 @@ static t_info *info_start(int argc, char **argv) {
 	info->flag_l = 0;
 	info->num_of_sub = 0;
 	info->max_sub_len = 0;
-
+	info->total_blocks_l = 0;
 	for (int i = 0; i < argc; i++)
 		info->where_what[i] = 0;
-
 	return info;
 }
 
 int main(int argc, char *argv[]) {
 	t_info *info = info_start(argc - 1, &(argv[1])); // sending without file_name
-	printf("===========What inside==========\n");
-	for (int i = 0; i < info->argc; i++)
-		printf("%s\n", info->argv[i]);
-	printf("================================\n");
+	// printf("===========What inside==========\n");
+	// for (int i = 0; i < info->argc; i++)
+	// 	printf("%s\n", info->argv[i]);
+	// printf("================================\n");
 	mx_start(info);
 	//system("leaks uls");
 	return 0;

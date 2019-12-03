@@ -26,9 +26,6 @@ static void basic_print(t_info *info) {
 	int sub_r;
 	int tab_len = 0;
 
-	printf("sub_len = %d\n", info->max_sub_len);
-	printf("num_of_sub = %d\n", info->num_of_sub);
-	printf("num_of_lines = %d\n", num_of_lines);
 	for (int i = 0; i < num_of_lines; i++) {
 		j = 0;
 		sub_r = 0;
@@ -89,11 +86,32 @@ static void print_l(t_info *info) {
 	}
 }
 
-void mx_print_arg(t_info *info) {
-	if (info->flag_l) {
-		count_tabs_l(info);
-		print_l(info);
+static void print_1(t_info *info) {
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
+		mx_printstr(tmp->data);
+		mx_printchar('\n');
 	}
-	else
+}
+
+void mx_print_arg(t_info *info) {
+	int f = 1;
+	if (info->all_our_flags) {
+		for (int i = mx_strlen(info->all_our_flags) - 1; i >= 0; i--) {
+			if (info->all_our_flags[i] == 'l' && f--) {
+				count_tabs_l(info);
+				mx_printstr("total ");
+				mx_printint(info->total_blocks_l);
+				mx_printchar('\n');
+				print_l(info);
+				info->total_blocks_l = 0;
+				break;
+			}
+			else if (info->all_our_flags[i] == '1' && f--) {
+				print_1(info);
+				break;
+			}
+		}
+	}
+	if (f)
 		basic_print(info);
 }
