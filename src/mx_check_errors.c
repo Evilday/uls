@@ -1,17 +1,17 @@
 #include "uls.h"
 
 char *mx_up_to_one(char *str) {
-	int pos = mx_strlen(str) - 1;
+	int pos = mx_strlen(str) - 2;
 
-	while (str[pos] != *str && str[pos] != '/')
+	while (pos > 0 && str[pos] != '/')
 		pos--;
 	return mx_strndup(str, pos);
 }
 
 static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
-	if ((f = opendir(file))) {
+	if ((f = opendir(file))) { // намагаємося відкрити без уточнення, що це файл
 		while((d = readdir(f)))
-			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
+			if (!mx_strcmp(d->d_name, arg + mx_strlen(file))) {
 				closedir(f);
 				return 1;
 			}
@@ -33,14 +33,14 @@ bool mx_check_argv(t_info *info, int i) {
 	struct dirent *d = NULL;
 	char *file;
 
-	if ((f = opendir(info->argv[i]))) {
+	if ((f = opendir(info->argv[i]))) { // намагаємося вікрити аргумент
 		closedir(f);
 		info->args_exist = 1;
-		info->where_what[i] = 2;
+		info->where_what[i] = 3;
 		return 1;
 	}
 	else {
-		file = mx_up_to_one(info->argv[i]);
+		file = mx_up_to_one(info->argv[i]); // обрізаємо уточнення, що це файл
 		if (else_check_argv(info->argv[i], file, f, d)) {
 			free(file);
 			info->args_exist = 1;
@@ -57,7 +57,7 @@ bool mx_check_flags(t_info *info, int i) {
 
 	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
-			info->where_what[i] = 3;
+			info->where_what[i] = 4;
 			return 0;
 		}
 		info->flags_exist = 1;

@@ -1,12 +1,13 @@
 #include "uls.h"
 
-t_uni_list *mx_create_uni_list(char *data, char *path) {
+t_uni_list *mx_create_uni_list(char *data, char *path, int f) {
 	t_uni_list *new_uni_list = (t_uni_list *)malloc(sizeof(t_uni_list));
 	char *str;
 
 	if (new_uni_list) {
 		new_uni_list->data = mx_strdup(data);
 		new_uni_list->next = NULL;
+		new_uni_list->folder = f == 4 ?  1 : 0;
 		if (path) {
 			str = mx_strndup(path, mx_strlen(path) + 1);
 			mx_strcat(str, "/");
@@ -18,11 +19,11 @@ t_uni_list *mx_create_uni_list(char *data, char *path) {
 	}
 	return new_uni_list;
 }
-void mx_push_uni_list_back(t_uni_list **list, void *data, char *path) {
+void mx_push_uni_list_back(t_uni_list **list, void *data, char *path, int f) {
 	t_uni_list *new_uni_list = NULL;
 	t_uni_list *temp = *list;
 
-	if (list && (new_uni_list = mx_create_uni_list(data, path)) != NULL) {
+	if (list && (new_uni_list = mx_create_uni_list(data, path, f)) != NULL) {
 		if (*list) {
 			while (temp->next)
 				temp = temp->next;

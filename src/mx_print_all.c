@@ -87,14 +87,28 @@ static void print_l(t_info *info) {
 }
 
 static void print_1(t_info *info) {
+	mx_printstr("Path = ");
+	mx_printstr(info->sub_args->path);
+	mx_printchar('\n');
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
 		mx_printstr(tmp->data);
 		mx_printchar('\n');
 	}
+	mx_printchar('\n');
 }
 
-void mx_print_arg(t_info *info) {
+void mx_print_arg(t_info *info, bool folder) {
 	int f = 1;
+
+	if (info->first_argv)
+		info->first_argv = 0;
+	else
+		mx_printchar('\n');
+
+	if (folder) {
+		mx_printstr(mx_up_to_one(info->sub_args->path));
+		mx_printstr(":\n");
+	}
 	if (info->all_our_flags) {
 		for (int i = mx_strlen(info->all_our_flags) - 1; i >= 0; i--) {
 			if (info->all_our_flags[i] == 'l' && f--) {

@@ -5,6 +5,7 @@ static t_info *info_start(int argc, char **argv) {
 
 	info->argc = argc;
 	info->argv = argv;
+	info->first_argv = 1;
 	info->flags_exist = 0;
 	info->args_exist = 0;
 	info->where_what = (int *)malloc(sizeof(int) * argc);
@@ -14,7 +15,6 @@ static t_info *info_start(int argc, char **argv) {
 	info->tabs_l = NULL;
 	info->flag_a = 0;
 	info->flag_A = 0;
-	info->flag_l = 0;
 	info->num_of_sub = 0;
 	info->max_sub_len = 0;
 	info->total_blocks_l = 0;
