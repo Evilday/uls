@@ -2,6 +2,7 @@
 
 void mx_print_unicode(wchar_t c) {
 	char out[5] = {0};
+	
 	if (c < 0x80) // < 128
 		out[0] = (c >> 0 & 0x7F /* 127 */) | 0x00;
 	else if (c < 0x0800) { // < 2048
