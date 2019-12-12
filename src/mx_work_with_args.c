@@ -79,6 +79,6 @@ void mx_work_with_args(t_info *info) {
 	}
 	else { // якщо не дано ні файлу пі папки
 		default_args(info);
-		mx_work_with_one_arg(info, info->argv[0], 0);
+		mx_work_with_one_arg(info, info->argv[0], 3);
 	}
 }

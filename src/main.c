@@ -5,6 +5,7 @@ static t_info *info_start(int argc, char **argv) {
 
 	info->argc = argc;
 	info->argv = argv;
+	info->num_of_arg = 0;
 	info->first_argv = 1;
 	info->flags_exist = 0;
 	info->args_exist = 0;

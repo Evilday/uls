@@ -99,23 +99,31 @@ static void print_1(t_info *info) {
 
 void mx_print_arg(t_info *info, bool folder) {
 	int f = 1;
-
-	if (info->first_argv)
-		info->first_argv = 0;
-	else
-		mx_printchar('\n');
-
+		
 	if (folder) {
-		mx_printstr(mx_up_to_one(info->sub_args->path));
-		mx_printstr(":\n");
+		if (info->first_argv)
+			info->first_argv = 0;
+		else
+			mx_printchar('\n');
+		if (info->num_of_arg != 0) {
+			mx_printstr(mx_up_to_one(info->sub_args->path));
+			mx_printstr(":\n");
+		}
+		else
+			info->num_of_arg = 0;
 	}
+	else
+		info->first_argv = 0;
+
 	if (info->all_our_flags) {
 		for (int i = mx_strlen(info->all_our_flags) - 1; i >= 0; i--) {
 			if (info->all_our_flags[i] == 'l' && f--) {
 				count_tabs_l(info);
-				mx_printstr("total ");
-				mx_printint(info->total_blocks_l);
-				mx_printchar('\n');
+				if (folder) {
+					mx_printstr("total ");
+					mx_printint(info->total_blocks_l);
+					mx_printchar('\n');
+				}
 				print_l(info);
 				info->total_blocks_l = 0;
 				break;

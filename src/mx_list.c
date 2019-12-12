@@ -15,7 +15,7 @@ t_uni_list *mx_create_uni_list(char *data, char *path, int f) {
 			free(str);
 		}
 		else
-			new_uni_list->path = NULL;
+			new_uni_list->path = mx_strdup(data);
 	}
 	return new_uni_list;
 }

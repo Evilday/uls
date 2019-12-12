@@ -23,6 +23,9 @@ void mx_start(t_info *info) {
 		// 	printf("file/folder = %d\n", info->where_what[i]);
 		// printf("================================\n");
 		// End
+		for (int i = 0; info->where_what[i]; i++)
+			if (info->where_what[i] == 2 || info->where_what[i] == 3)
+				info->num_of_arg++;
 		mx_sort_args(info);
 		mx_work_with_args(info);
 	}

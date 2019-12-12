@@ -26,11 +26,12 @@ static bool else_look_sub_argv(t_info *info, char *arg, char *file) {
 	int num_of_sub = 0;
 
 	if ((f = opendir(file))) { // намагаємося відкрити аргумент без закінчення (src/main.c = src/)
-		while((d = readdir(f)))
-			if (!mx_strcmp(d->d_name, arg + mx_strlen(file))) {
-				mx_push_uni_list_back(&(info->sub_args), arg, file, d->d_type);
+		while((d = readdir(f))) {
+			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
+				mx_push_uni_list_back(&(info->sub_args), arg, NULL, d->d_type);
 				++num_of_sub;
 			}
+		}
 			closedir(f);
 			info->num_of_sub = num_of_sub;
 			return 1;
@@ -39,7 +40,7 @@ static bool else_look_sub_argv(t_info *info, char *arg, char *file) {
 		f = opendir("."); // шукаємо файл в папці де ми знаходимося
 		while((d = readdir(f)))
 			if (!mx_strcmp(d->d_name, arg)) {
-				mx_push_uni_list_back(&(info->sub_args), arg, ".", d->d_type);
+				mx_push_uni_list_back(&(info->sub_args), arg, "./", d->d_type);
 				info->num_of_sub = 1;
 			}
 		closedir(f);

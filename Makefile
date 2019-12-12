@@ -38,7 +38,7 @@ uninstall:
 	@rm -rf ./obj
 
 clean: uninstall
-	@cd libmx && make -f Makefile clean
+	@make -C libmx -f Makefile clean
 	@rm -rf $(NAME)
 
 reinstall: clean all

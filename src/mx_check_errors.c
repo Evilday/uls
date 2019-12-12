@@ -1,7 +1,7 @@
 #include "uls.h"
 
 char *mx_up_to_one(char *str) {
-	int pos = mx_strlen(str) - 2;
+	int pos = mx_strlen(str) - 1;
 
 	while (pos > 0 && str[pos] != '/')
 		pos--;
@@ -10,11 +10,12 @@ char *mx_up_to_one(char *str) {
 
 static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
 	if ((f = opendir(file))) { // намагаємося відкрити без уточнення, що це файл
-		while((d = readdir(f)))
-			if (!mx_strcmp(d->d_name, arg + mx_strlen(file))) {
+		while((d = readdir(f))) {
+			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
 				closedir(f);
 				return 1;
 			}
+		}
 	}
 	else {
 		f = opendir(".");

@@ -47,7 +47,8 @@ typedef struct s_info_l {
 typedef struct s_info {
 	int argc;
 	char **argv;
-	bool first_argv;
+	int num_of_arg; // кількість аргументів для виводу
+	bool first_argv; // щоб перевірити, чи ми виводимо перший аргумент
 
 	bool flags_exist; // чи є якісь флаги серез аргументів,  що поступили
 	bool args_exist; // чи є файл/папка серез аргументів, що поступили
