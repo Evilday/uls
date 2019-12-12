@@ -25,7 +25,7 @@ CFLGS = -std=c11 -Wall -Werror -Wextra -Wpedantic -g
 all: install uninstall
 
 install:
-	@cd libmx && make -f Makefile install
+	@make -C libmx -f Makefile install
 	@cp $(INC) $(SRCS) .
 	@clang $(CFLGS) -c  $(SRC)
 	@mkdir  obj
@@ -33,7 +33,7 @@ install:
 	@clang $(CFLGS) $(OBJO) libmx/libmx.a -o $(NAME)
 
 uninstall:
-	@cd libmx && make -f Makefile uninstall
+	@make -C libmx -f Makefile uninstall
 	@rm -rf $(OBJO) $(SRC) $(HEADTMP)
 	@rm -rf ./obj
 
