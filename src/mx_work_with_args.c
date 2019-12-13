@@ -1,15 +1,6 @@
 #include "uls.h"
 
-// void mx_check_folder(t_info *info) {
-// 	if (info) {}
-
-// 	DIR *f;
-// 	struct dirent *dr;
-// 	f = opendir(".");
-// 	while ((dr = readdir(f))) {
-// 		printf("d_ino = %d    %s\n", dr->d_type, dr->d_name);
-// 	}
-// }
+static void default_args(t_info *info);
 
 void mx_sort_args(t_info *info) {
 	char *temp_str;
@@ -43,14 +34,6 @@ void mx_sort_uni_list(t_uni_list *lst) {
 				}
 }
 
-static void default_args(t_info *info) {
-	char **all_elems = (char **)malloc(sizeof(char *) * 2);
-	all_elems[0] = ".";
-	all_elems[1] = NULL;
-	info->argc = 1;
-	info->argv = all_elems;
-}
-
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
 	mx_look_sub_argv(info, arg);
 	mx_sort_uni_list(info->sub_args);
@@ -73,12 +56,21 @@ void mx_work_with_args(t_info *info) {
 				mx_work_with_one_arg(info, info->argv[i], 0); // обробка аргумента, що є файлом
 		}
 		for (int i = 0; i < info->argc; i++) {
-			if (info->where_what[i] == 3)
+			if (info->where_what[i] == 3) {
 				mx_work_with_one_arg(info, info->argv[i], 1); // обробка аргумента, що є папкою
+			}
 		}
 	}
 	else { // якщо не дано ні файлу пі папки
 		default_args(info);
 		mx_work_with_one_arg(info, info->argv[0], 3);
 	}
+}
+
+static void default_args(t_info *info) {
+	char **all_elems = (char **)malloc(sizeof(char *) * 2);
+	all_elems[0] = ".";
+	all_elems[1] = NULL;
+	info->argc = 1;
+	info->argv = all_elems;
 }

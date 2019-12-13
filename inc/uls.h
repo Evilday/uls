@@ -77,13 +77,19 @@ bool mx_check_argv(t_info *info, int i);
 // mx_start
 void mx_start(t_info *info);
 
+// mx_info_prepare
+t_info *mx_info_start(int argc, char **argv);
+
 // mx_del_all
 void mx_del_info(t_info **info);
 
-// print_all
+// mx_print
+void mx_print_tabs(int n);
+void mx_print_arg(t_info *info, bool folder);
+
+// mx_print_errors
 void mx_invalid_usage();
 void mx_arg_not_exist(t_info *info);
-void mx_print_arg(t_info *info, bool folder);
 
 // mx_work_with_args
 void mx_sort_args(t_info *info);
@@ -117,5 +123,9 @@ void mx_advanced_permissions_check(t_info *info);
 void mx_basic_permissions(t_info *info);
 void mx_date_time_for_l(t_info *info);
 void mx_group_size_for_l(t_info *info);
+
+// mx_flag_l_2
+void mx_count_tabs_l(t_info *info);
+void mx_print_l(t_info *info);
 
 #endif

@@ -1,5 +1,7 @@
 #include "uls.h"
 
+static char *get_login(uid_t st_uid);
+
 void mx_advanced_permissions_check(t_info *info) {
 	acl_t acl;
 	t_info_l *tmp_info_l = info->info_l;
@@ -37,12 +39,6 @@ void mx_basic_permissions(t_info *info) {
 		free(str);
 		j = 0;
 	}
-}
-
-static char *get_login(uid_t st_uid) {
-	struct passwd *pw = getpwuid(st_uid);
-
-	return pw->pw_name;
 }
 
 void mx_date_time_for_l(t_info *info) {
@@ -93,4 +89,10 @@ void mx_group_size_for_l(t_info *info) {
 		tmp->sym_num = mx_itoa(buff.st_size);
 		tmp2 = tmp2->next;
 	}
+}
+
+static char *get_login(uid_t st_uid) {
+	struct passwd *pw = getpwuid(st_uid);
+
+	return pw->pw_name;
 }

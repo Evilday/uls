@@ -1,5 +1,25 @@
 #include "uls.h"
 
+static bool check_basic_errors(t_info *info);
+
+void mx_start(t_info *info) {
+	if (check_basic_errors(info)) {
+		// just for look
+		// printf("======Info flags and args=======\n");
+		// printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
+		// for (int i = 0; i < info->argc; i++)
+		// 	printf("file/folder = %d\n", info->where_what[i]);
+		// printf("================================\n");
+		// End
+		for (int i = 0; i < info->argc; i++)
+			if (info->where_what[i] == 2 || info->where_what[i] == 3 
+				|| info->where_what[i] == 0)
+				info->num_of_arg++;
+		mx_sort_args(info);
+		mx_work_with_args(info);
+	}
+}
+
 static bool check_basic_errors(t_info *info) {
 	bool flags = 1;
 	for (int i = 0; i < info->argc; i++) {
@@ -12,21 +32,4 @@ static bool check_basic_errors(t_info *info) {
 		}
 	}
 	return 1;
-}
-
-void mx_start(t_info *info) {
-	if (check_basic_errors(info)) {
-		// just for look
-		// printf("======Info flags and args=======\n");
-		// printf("INFO = flags = %d , arg = %d\n", info->flags_exist, info->args_exist);
-		// for (int i = 0; i < info->argc; i++)
-		// 	printf("file/folder = %d\n", info->where_what[i]);
-		// printf("================================\n");
-		// End
-		for (int i = 0; info->where_what[i]; i++)
-			if (info->where_what[i] == 2 || info->where_what[i] == 3)
-				info->num_of_arg++;
-		mx_sort_args(info);
-		mx_work_with_args(info);
-	}
 }

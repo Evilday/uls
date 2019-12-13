@@ -1,13 +1,6 @@
 #include "uls.h"
 
-static int list_size(t_uni_list *list) {
-	int size = 0;
-
-	if (list)
-		for (t_uni_list *temp = list; temp; temp = temp->next, size++);
-
-	return size;
-}
+static int list_size(t_uni_list *list);
 
 int mx_num_of_cols(t_info *info) {
 	struct winsize w;
@@ -25,6 +18,15 @@ int mx_num_of_cols(t_info *info) {
 			lines++;
 	info->max_sub_len = max_len;
 	return lines;
+}
+
+static int list_size(t_uni_list *list) {
+	int size = 0;
+
+	if (list)
+		for (t_uni_list *temp = list; temp; temp = temp->next, size++);
+
+	return size;
 }
 /*
 табуляция ширина нашего окна делится (5) 8 

@@ -1,32 +1,13 @@
 #include "uls.h"
 
+static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d);
+
 char *mx_up_to_one(char *str) {
 	int pos = mx_strlen(str) - 1;
 
 	while (pos > 0 && str[pos] != '/')
 		pos--;
 	return mx_strndup(str, pos);
-}
-
-static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
-	if ((f = opendir(file))) { // намагаємося відкрити без уточнення, що це файл
-		while((d = readdir(f))) {
-			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
-				closedir(f);
-				return 1;
-			}
-		}
-	}
-	else {
-		f = opendir(".");
-		while((d = readdir(f)))
-			if (!mx_strcmp(d->d_name, arg)) {
-				closedir(f);
-				return 1;
-			}
-	}
-	closedir(f);
-	return 0;
 }
 
 bool mx_check_argv(t_info *info, int i) {
@@ -73,5 +54,26 @@ bool mx_check_flags(t_info *info, int i) {
 	}
 	else
 		mx_check_argv(info, i);
+	return 0;
+}
+
+static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
+	if ((f = opendir(file))) { // намагаємося відкрити без уточнення, що це файл
+		while((d = readdir(f))) {
+			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
+				closedir(f);
+				return 1;
+			}
+		}
+	}
+	else {
+		f = opendir(".");
+		while((d = readdir(f)))
+			if (!mx_strcmp(d->d_name, arg)) {
+				closedir(f);
+				return 1;
+			}
+	}
+	closedir(f);
 	return 0;
 }

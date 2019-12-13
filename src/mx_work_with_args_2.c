@@ -1,5 +1,27 @@
 #include "uls.h"
 
+static bool check_sub_argv(t_info *info, char *arg, DIR *f, struct dirent *d);
+static bool else_look_sub_argv(t_info *info, char *arg, char *file);
+
+bool mx_look_sub_argv(t_info *info, char *arg) {
+	DIR *f = NULL;
+	struct dirent *d = NULL;
+	char *file;
+
+	if (check_sub_argv(info, arg, f, d)) { // спроба відкрити аргумент
+		return 1;
+	}
+	else {
+		file = mx_up_to_one(arg);
+		if (else_look_sub_argv(info, arg, file)) {
+			free(file);
+			return 1;
+		}
+		free(file);
+	}
+	return 0;
+}
+
 static bool check_sub_argv(t_info *info, char *arg, DIR *f, struct dirent *d) {
 	int num_of_sub = 0;
 
@@ -45,25 +67,6 @@ static bool else_look_sub_argv(t_info *info, char *arg, char *file) {
 			}
 		closedir(f);
 		return 1;
-	}
-	return 0;
-}
-
-bool mx_look_sub_argv(t_info *info, char *arg) {
-	DIR *f = NULL;
-	struct dirent *d = NULL;
-	char *file;
-
-	if (check_sub_argv(info, arg, f, d)) { // спроба відкрити аргумент
-		return 1;
-	}
-	else {
-		file = mx_up_to_one(arg);
-		if (else_look_sub_argv(info, arg, file)) {
-			free(file);
-			return 1;
-		}
-		free(file);
 	}
 	return 0;
 }
