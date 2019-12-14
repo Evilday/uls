@@ -1,6 +1,6 @@
 #include "uls.h"
 
-static void basic_print(t_info *info);
+static void basic_print(t_info *info, int num_of_lines);
 static void print_1(t_info *info);
 
 void mx_print_tabs(int n) {
@@ -16,8 +16,9 @@ void mx_print_arg(t_info *info, bool folder) {
 			info->first_argv = 0;
 		else
 			mx_printchar('\n');
-		if (info->num_of_arg != 0) {
+		if (info->num_of_arg > 1) {
 			char *str = mx_up_to_one(info->sub_args->path);
+
 			mx_printstr(str);
 			free(str);
 			mx_printstr(":\n");
@@ -47,12 +48,14 @@ void mx_print_arg(t_info *info, bool folder) {
 			}
 		}
 	}
-	if (f)
-		basic_print(info);
+	if (f) {
+		int num_of_lines = mx_num_of_cols(info);
+
+		basic_print(info, num_of_lines);
+	}
 }
 
-static void basic_print(t_info *info) {
-	int num_of_lines = mx_num_of_cols(info);
+static void basic_print(t_info *info, int num_of_lines) {
 	int j;
 	int sub_r;
 	int tab_len = 0;

@@ -2,38 +2,6 @@
 
 static void default_args(t_info *info);
 
-void mx_sort_args(t_info *info) {
-	char *temp_str;
-	int temp_id;
-	for (int i = 0; info->argv[i]; i++) {
-		for (int j = 0; info->argv[j + 1 + i]; j++) {
-			if (mx_strcmp(info->argv[j], info->argv[j + 1]) > 0) {
-				temp_str = info->argv[j];
-				temp_id = info->where_what[j];
-				info->argv[j] = info->argv[j + 1];
-				info->where_what[j] = info->where_what[j + 1];
-				info->argv[j + 1] = temp_str;
-				info->where_what[j + 1] = temp_id;
-			}
-		}
-	}
-}
-
-void mx_sort_uni_list(t_uni_list *lst) {
-	bool temp;
-
-	if (lst)
-		for (t_uni_list *temp1 = lst; temp1; temp1 = temp1->next)
-			for (t_uni_list *temp2 = lst; temp2->next; temp2 = temp2->next)
-				if(mx_strcmp(temp2->data, temp2->next->data) > 0) {
-					mx_swap_str(&temp2->data, &temp2->next->data);
-					mx_swap_str(&temp2->path, &temp2->next->path);
-					temp = temp2->folder;
-					temp2->folder = temp2->next->folder;
-					temp2->next->folder = temp;
-				}
-}
-
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
 	mx_look_sub_argv(info, arg);
 	mx_sort_uni_list(info->sub_args);
@@ -46,24 +14,50 @@ void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
 		mx_pop_info_l_front(&(info->info_l));
 }
 
+void mx_arg_files(t_info *info) { // обробка аргумента, що є файлом
+	for (int i = 0; i < info->argc; i++) {
+		if (info->where_what[i] == 2) {
+			info->num_of_sub++;
+			mx_push_uni_list_back(&(info->sub_args), info->argv[i], NULL, 0);
+		}
+	}
+	mx_sort_uni_list(info->sub_args);
+	if (info->flags_exist)
+		mx_work_with_flags(info);
+	mx_print_arg(info, 0);
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next)
+		mx_pop_uni_list_front(&(info->sub_args));
+	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next)
+		mx_pop_info_l_front(&(info->info_l));
+}
+
+void mx_arg_folders(t_info *info) { // обробка аргумента, що є папкою
+	for (int i = 0; i < info->argc; i++) {
+		if (info->where_what[i] == 3) {
+			if (info->flag_R)
+				mx_flag_R(info, info->argv[i]);
+			else
+				mx_work_with_one_arg(info, info->argv[i], 1);
+		}
+	}
+}
+
 void mx_work_with_args(t_info *info) {
 	mx_arg_not_exist(info);
 	if (info->flags_exist)
 		mx_take_flags(info);
-	if (info->args_exist) { // спочатку на друк всі файли, а тоді всі папки
-		for (int i = 0; i < info->argc; i++) {
-			if (info->where_what[i] == 2)
-				mx_work_with_one_arg(info, info->argv[i], 0); // обробка аргумента, що є файлом
-		}
-		for (int i = 0; i < info->argc; i++) {
-			if (info->where_what[i] == 3) {
-				mx_work_with_one_arg(info, info->argv[i], 1); // обробка аргумента, що є папкою
-			}
-		}
+	if (info->file_exist || info->folder_exist) {
+		if (info->file_exist)
+			mx_arg_files(info);
+		if (info->folder_exist)
+			mx_arg_folders(info);
 	}
 	else { // якщо не дано ні файлу пі папки
 		default_args(info);
-		mx_work_with_one_arg(info, info->argv[0], 3);
+		if (info->flag_R)
+			mx_flag_R(info, info->argv[0]);
+		else
+			mx_work_with_one_arg(info, info->argv[0], 1);
 	}
 }
 

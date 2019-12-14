@@ -51,7 +51,8 @@ typedef struct s_info {
 	bool first_argv; // щоб перевірити, чи ми виводимо перший аргумент
 
 	bool flags_exist; // чи є якісь флаги серез аргументів,  що поступили
-	bool args_exist; // чи є файл/папка серез аргументів, що поступили
+	bool file_exist; // чи є файл серез аргументів, що поступили
+	bool folder_exist; // чи є папка серез аргументів, що поступили
 
 	int *where_what; // 0 - не валідна, 1 - флажок, 2 - файл, 3 - папка, 4 - ігнор
 
@@ -67,6 +68,7 @@ typedef struct s_info {
 
 	bool flag_a;
 	bool flag_A;
+	bool flag_R;
 } t_info;
 
 // mx_check_errors
@@ -80,9 +82,6 @@ void mx_start(t_info *info);
 // mx_info_prepare
 t_info *mx_info_start(int argc, char **argv);
 
-// mx_del_all
-void mx_del_info(t_info **info);
-
 // mx_print
 void mx_print_tabs(int n);
 void mx_print_arg(t_info *info, bool folder);
@@ -92,7 +91,6 @@ void mx_invalid_usage();
 void mx_arg_not_exist(t_info *info);
 
 // mx_work_with_args
-void mx_sort_args(t_info *info);
 void mx_work_with_args(t_info *info);
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder);
 
@@ -103,6 +101,10 @@ bool mx_look_sub_argv(t_info *info, char *arg);
 void mx_work_with_flags(t_info *info);
 void mx_l_flag(t_info *info);
 void mx_take_flags(t_info *info);
+
+// mx_sort
+void mx_sort_args(t_info *info);
+void mx_sort_uni_list(t_uni_list *lst);
 
 // mx_window.c
 int mx_num_of_cols(t_info *info);
@@ -127,5 +129,8 @@ void mx_group_size_for_l(t_info *info);
 // mx_flag_l_2
 void mx_count_tabs_l(t_info *info);
 void mx_print_l(t_info *info);
+
+// mx_flag_R
+void mx_flag_R(t_info *info, char *arg);
 
 #endif

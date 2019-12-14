@@ -17,7 +17,7 @@ bool mx_check_argv(t_info *info, int i) {
 
 	if ((f = opendir(info->argv[i]))) { // намагаємося вікрити аргумент
 		closedir(f);
-		info->args_exist = 1;
+		info->folder_exist = 1;
 		info->where_what[i] = 3;
 		return 1;
 	}
@@ -25,7 +25,7 @@ bool mx_check_argv(t_info *info, int i) {
 		file = mx_up_to_one(info->argv[i]); // обрізаємо уточнення, що це файл
 		if (else_check_argv(info->argv[i], file, f, d)) {
 			free(file);
-			info->args_exist = 1;
+			info->file_exist = 1;
 			info->where_what[i] = 2;
 			return 1;
 		}

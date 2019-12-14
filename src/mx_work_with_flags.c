@@ -25,6 +25,8 @@ void mx_take_flags(t_info *info) {
 			info->flag_a = 1;
 		else if (our_flags[i] == 'A')
 			info->flag_A = 1;
+		else if (our_flags[i] == 'R')
+			info->flag_R = 1;
 	}
 	info->all_our_flags = our_flags;
 }
