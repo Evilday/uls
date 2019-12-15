@@ -56,7 +56,7 @@ typedef struct s_info {
 
 	int *where_what; // 0 - не валідна, 1 - флажок, 2 - файл, 3 - папка, 4 - ігнор
 
-	char *all_our_flags; // список всіх наших флагів, які нам прийшли
+	// char *all_our_flags; // список всіх наших флагів, які нам прийшли
 
 	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
 	int num_of_sub; // кількість елементів в агрументі
@@ -66,9 +66,20 @@ typedef struct s_info {
 	struct s_tabs_l *tabs_l; // кількість пробілів для кожного елементу флага l при виводі
 	int total_blocks_l;
 
+	char top_flag; // type for print (l, 1, S)
 	bool flag_a;
 	bool flag_A;
 	bool flag_R;
+	bool flag_G;
+	bool flag_h;
+	bool flag_dog; // flag @
+	bool flag_e;
+	bool flag_T;
+	bool flag_C;
+	bool flag_r;
+	bool flag_t;
+	bool flag_u;
+	bool flag_c;
 } t_info;
 
 // mx_check_errors
@@ -121,14 +132,15 @@ void mx_pop_info_l_front(t_info_l **head);
 void mx_look_sub_argv_2(t_info *info, char *arg, DIR *f, struct dirent *d);
 
 // mx_flag_l
+void mx_l_permissions(t_info *info);
+void mx_basic_l_permissions(t_info *info, unsigned long perm);
 void mx_advanced_permissions_check(t_info *info);
-void mx_basic_permissions(t_info *info);
 void mx_date_time_for_l(t_info *info);
 void mx_group_size_for_l(t_info *info);
 
 // mx_flag_l_2
 void mx_count_tabs_l(t_info *info);
-void mx_print_l(t_info *info);
+char *mx_sym_num(char access, struct stat buff);
 
 // mx_flag_R
 void mx_flag_R(t_info *info, char *arg);

@@ -1,5 +1,9 @@
 #include "uls.h"
-// print_l
+
+static char *get_major (unsigned int rdev);
+static char *get_minor (unsigned int rdev);
+static char *check_minor(unsigned int rdev);
+
 void mx_count_tabs_l(t_info *info) {
 	t_tabs_l *tabs_l = (t_tabs_l *)malloc(sizeof(t_tabs_l));
 	tabs_l->l_nlink = tabs_l->l_login = tabs_l->l_group_owner
@@ -12,7 +16,7 @@ void mx_count_tabs_l(t_info *info) {
 			tabs_l->l_login = mx_strlen(tmp->login);
 		if (mx_strlen(tmp->group_owner) > tabs_l->l_group_owner)
 			tabs_l->l_group_owner = mx_strlen(tmp->group_owner);
-		if (mx_strlen(tmp->sym_num) > tabs_l->l_sym_num)
+		if (mx_strlen(tmp->sym_num) > tabs_l->l_sym_num && mx_strlen(tmp->sym_num) < 9)
 			tabs_l->l_sym_num = mx_strlen(tmp->sym_num);
 		if (mx_strlen(tmp->time_upd) > tabs_l->l_time_upd)
 			tabs_l->l_time_upd = mx_strlen(tmp->time_upd);
@@ -20,25 +24,70 @@ void mx_count_tabs_l(t_info *info) {
 	info->tabs_l = tabs_l;
 }
 
-void mx_print_l(t_info *info) {
-	t_uni_list *t2 = info->sub_args;
-	t_tabs_l *tmp3 = info->tabs_l;
+char *mx_sym_num(char access, struct stat buff) {
+	char *sym_num = NULL;
+	char *major = NULL;
+	char *minor = NULL;
 
-	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next, t2 = t2->next) {
-		mx_printstr(tmp->access);
-		mx_print_tabs(tmp3->l_nlink - mx_strlen(tmp->nlink));
-		mx_printstr(tmp->nlink);
-		mx_print_tabs(1);
-		mx_printstr(tmp->login);
-		mx_print_tabs(tmp3->l_login - mx_strlen(tmp->login) + 2);
-		mx_printstr(tmp->group_owner);
-		mx_print_tabs(tmp3->l_group_owner - mx_strlen(tmp->group_owner));
-		mx_print_tabs(tmp3->l_sym_num - mx_strlen(tmp->sym_num) + 2);
-		mx_printstr(tmp->sym_num);
-		mx_print_tabs(1);
-		mx_printstr(tmp->time_upd);
-		mx_print_tabs(tmp3->l_time_upd - mx_strlen(tmp->time_upd) + 1);
-		mx_printstr(t2->data);
-		mx_printchar('\n');
+	if (access == 'b' || access == 'c') {
+		sym_num = get_major(buff.st_rdev);
+		major = mx_strjoin(sym_num, ", ");
+		free(sym_num);
+		minor = get_minor(buff.st_rdev);
+		sym_num = mx_strjoin(major, minor);
+		free(major);
+		free(minor);
 	}
+	else
+		sym_num = mx_itoa(buff.st_size);
+	return sym_num;
+}
+
+static char *get_major (unsigned int rdev) {
+	char *major;
+
+	major = mx_itoa((rdev >> 24) & 0xff);
+	while (mx_strlen(major) < 3) {
+		char *tmp_str = NULL;
+
+		tmp_str = mx_strjoin(" ", major);
+		free(major);
+		major = mx_strdup(tmp_str);
+		free(tmp_str);
+	}
+	return major;
+}
+
+static char *get_minor (unsigned int rdev) {
+	char *minor;
+
+	minor = check_minor(rdev);
+	while (mx_strlen(minor) < 3) {
+		char *tmp_str = NULL;
+
+		tmp_str = mx_strjoin(" ", minor);
+		free(minor);
+		minor = mx_strdup(tmp_str);
+		free(tmp_str);
+	}
+	return minor;
+}
+
+static char *check_minor(unsigned int rdev) {
+	char *minor;
+
+	minor = mx_itoa(rdev & 0xffffff);
+	if ((rdev & 0xffffff) > 256) {
+		free(minor);
+		minor = mx_nbr_to_hex(rdev & 0xffffff);
+		while (mx_strlen(minor) < 10) {
+			char *tmp_str = mx_strdup(minor);
+
+			free(minor);
+			minor = mx_strjoin("0", tmp_str);
+			free(tmp_str);
+		}
+		minor[1] = 'x';
+	}
+	return minor;
 }

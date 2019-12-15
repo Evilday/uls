@@ -2,6 +2,37 @@
 
 static char *get_login(uid_t st_uid);
 
+void mx_l_permissions(t_info *info) {
+	struct stat buff;
+
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
+		lstat(tmp->path, &buff);
+		mx_basic_l_permissions(info, buff.st_mode);
+	}
+	mx_advanced_permissions_check(info);
+}
+
+void mx_basic_l_permissions(t_info *info, unsigned long perm) {
+	char *str;
+
+	str = mx_strnew(10);
+	str[0] = S_ISDIR(perm) ? 'd' : '-';
+	str[0] = S_ISLNK(perm) ? 'l' : str[0];
+	str[0] = S_ISCHR(perm) ? 'c' : str[0];
+	str[0] = S_ISBLK(perm) ? 'b' : str[0];
+	str[1] = perm & S_IRUSR ? 'r' : '-';
+	str[2] = perm & S_IWUSR ? 'w' : '-';
+	str[3] = perm & S_IXUSR ? 'x' : '-';
+	str[4] = perm & S_IRGRP ? 'r' : '-';
+	str[5] = perm & S_IWGRP ? 'w' : '-';
+	str[6] = perm & S_IXGRP ? 'x' : '-';
+	str[7] = perm & S_IROTH ? 'r' : '-';
+	str[8] = perm & S_IWOTH ? 'w' : '-';
+	str[9] = perm & S_IXOTH ? 'x' : '-';
+	mx_push_info_l_back(&(info->info_l), str);
+	free(str);
+}
+
 void mx_advanced_permissions_check(t_info *info) {
 	acl_t acl;
 	t_info_l *tmp_info_l = info->info_l;
@@ -14,30 +45,6 @@ void mx_advanced_permissions_check(t_info *info) {
 		}
 		if (listxattr(tmp->path, NULL, 0, XATTR_NOFOLLOW))
 			tmp_info_l->access[10] = '@';
-	}
-}
-
-void mx_basic_permissions(t_info *info) {
-	struct stat fileStat;
-	char *str;
-	int j = 0;
-
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		lstat(tmp->path, &fileStat);
-		str = mx_strnew(10);
-		str[j++] = S_ISDIR(fileStat.st_mode) ? 'd' : '-';
-		str[j++] = fileStat.st_mode & S_IRUSR ? 'r' : '-';
-		str[j++] = fileStat.st_mode & S_IWUSR ? 'w' : '-';
-		str[j++] = fileStat.st_mode & S_IXUSR ? 'x' : '-';
-		str[j++] = fileStat.st_mode & S_IRGRP ? 'r' : '-';
-		str[j++] = fileStat.st_mode & S_IWGRP ? 'w' : '-';
-		str[j++] = fileStat.st_mode & S_IXGRP ? 'x' : '-';
-		str[j++] = fileStat.st_mode & S_IROTH ? 'r' : '-';
-		str[j++] = fileStat.st_mode & S_IWOTH ? 'w' : '-';
-		str[j++] = fileStat.st_mode & S_IXOTH ? 'x' : '-';
-		mx_push_info_l_back(&(info->info_l), str);
-		free(str);
-		j = 0;
 	}
 }
 
@@ -86,7 +93,7 @@ void mx_group_size_for_l(t_info *info) {
 			tmp->login = get_login(buff.st_uid);
 		else
 			tmp->login = mx_strdup("root");
-		tmp->sym_num = mx_itoa(buff.st_size);
+		tmp->sym_num = mx_sym_num(tmp->access[0], buff);
 		tmp2 = tmp2->next;
 	}
 }

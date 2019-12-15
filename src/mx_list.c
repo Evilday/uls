@@ -1,6 +1,5 @@
 #include "uls.h"
 
-// for uni_list
 t_uni_list *mx_create_uni_list(char *data, char *path, int f) {
 	t_uni_list *new_uni_list = (t_uni_list *)malloc(sizeof(t_uni_list));
 	char *str;

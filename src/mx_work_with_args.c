@@ -63,6 +63,7 @@ void mx_work_with_args(t_info *info) {
 
 static void default_args(t_info *info) {
 	char **all_elems = (char **)malloc(sizeof(char *) * 2);
+	
 	all_elems[0] = ".";
 	all_elems[1] = NULL;
 	info->argc = 1;
