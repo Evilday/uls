@@ -3,11 +3,15 @@
 static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d);
 
 char *mx_up_to_one(char *str) {
-	int pos = mx_strlen(str) - 1;
+	if (str) {
+		int pos = mx_strlen(str) - 1;
 
-	while (pos > 0 && str[pos] != '/')
-		pos--;
-	return mx_strndup(str, pos);
+		while (pos > 0 && str[pos] != '/')
+			pos--;
+		return mx_strndup(str, pos);
+	}
+	else
+		return NULL;
 }
 
 bool mx_check_argv(t_info *info, int i) {

@@ -101,12 +101,17 @@ void mx_print_arg(t_info *info, bool folder);
 void mx_invalid_usage();
 void mx_arg_not_exist(t_info *info);
 
+// mx_print_types
+void mx_basic_print(t_info *info);
+void mx_print_1(t_info *info);
+void mx_print_l(t_info *info);
+
 // mx_work_with_args
 void mx_work_with_args(t_info *info);
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder);
 
 // mx_work_with_args_2
-bool mx_look_sub_argv(t_info *info, char *arg);
+bool mx_look_sub_argv(t_info *info, char *arg, t_uni_list *where_to_save);
 
 // mx_work_with_flags
 void mx_work_with_flags(t_info *info);
@@ -129,12 +134,10 @@ void mx_push_info_l_back(t_info_l **list, char *data);
 void mx_pop_info_l_front(t_info_l **head);
 
 // mx_flags_a_A
-void mx_look_sub_argv_2(t_info *info, char *arg, DIR *f, struct dirent *d);
+void mx_look_sub_argv_2(t_info *info, char *arg, DIR *f, t_uni_list *where_to_save);
 
 // mx_flag_l
 void mx_l_permissions(t_info *info);
-void mx_basic_l_permissions(t_info *info, unsigned long perm);
-void mx_advanced_permissions_check(t_info *info);
 void mx_date_time_for_l(t_info *info);
 void mx_group_size_for_l(t_info *info);
 

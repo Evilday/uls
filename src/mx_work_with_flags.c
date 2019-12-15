@@ -3,6 +3,7 @@
 static void mx_take_flags_2(t_info *info, bool *our_flags);
 
 void mx_l_flag(t_info *info) {
+	info->total_blocks_l = 0;
 	mx_l_permissions(info);
 	mx_group_size_for_l(info);
 	mx_date_time_for_l(info);

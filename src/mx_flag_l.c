@@ -1,51 +1,17 @@
 #include "uls.h"
 
 static char *get_login(uid_t st_uid);
+static void basic_l_permissions(t_info *info, unsigned long perm);
+static void advanced_permissions_check(t_info *info);
 
 void mx_l_permissions(t_info *info) {
 	struct stat buff;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
 		lstat(tmp->path, &buff);
-		mx_basic_l_permissions(info, buff.st_mode);
+		basic_l_permissions(info, buff.st_mode);
 	}
-	mx_advanced_permissions_check(info);
-}
-
-void mx_basic_l_permissions(t_info *info, unsigned long perm) {
-	char *str;
-
-	str = mx_strnew(10);
-	str[0] = S_ISDIR(perm) ? 'd' : '-';
-	str[0] = S_ISLNK(perm) ? 'l' : str[0];
-	str[0] = S_ISCHR(perm) ? 'c' : str[0];
-	str[0] = S_ISBLK(perm) ? 'b' : str[0];
-	str[1] = perm & S_IRUSR ? 'r' : '-';
-	str[2] = perm & S_IWUSR ? 'w' : '-';
-	str[3] = perm & S_IXUSR ? 'x' : '-';
-	str[4] = perm & S_IRGRP ? 'r' : '-';
-	str[5] = perm & S_IWGRP ? 'w' : '-';
-	str[6] = perm & S_IXGRP ? 'x' : '-';
-	str[7] = perm & S_IROTH ? 'r' : '-';
-	str[8] = perm & S_IWOTH ? 'w' : '-';
-	str[9] = perm & S_IXOTH ? 'x' : '-';
-	mx_push_info_l_back(&(info->info_l), str);
-	free(str);
-}
-
-void mx_advanced_permissions_check(t_info *info) {
-	acl_t acl;
-	t_info_l *tmp_info_l = info->info_l;
-
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
-		acl = acl_get_file(tmp->path, ACL_TYPE_EXTENDED);
-		if (acl) {
-			tmp_info_l->access[10] = '+';
-			acl_free(acl);
-		}
-		if (listxattr(tmp->path, NULL, 0, XATTR_NOFOLLOW))
-			tmp_info_l->access[10] = '@';
-	}
+	advanced_permissions_check(info);
 }
 
 void mx_date_time_for_l(t_info *info) {
@@ -102,4 +68,40 @@ static char *get_login(uid_t st_uid) {
 	struct passwd *pw = getpwuid(st_uid);
 
 	return pw->pw_name;
+}
+
+static void basic_l_permissions(t_info *info, unsigned long perm) {
+	char *str;
+
+	str = mx_strnew(10);
+	str[0] = S_ISDIR(perm) ? 'd' : '-';
+	str[0] = S_ISLNK(perm) ? 'l' : str[0];
+	str[0] = S_ISCHR(perm) ? 'c' : str[0];
+	str[0] = S_ISBLK(perm) ? 'b' : str[0];
+	str[1] = perm & S_IRUSR ? 'r' : '-';
+	str[2] = perm & S_IWUSR ? 'w' : '-';
+	str[3] = perm & S_IXUSR ? 'x' : '-';
+	str[4] = perm & S_IRGRP ? 'r' : '-';
+	str[5] = perm & S_IWGRP ? 'w' : '-';
+	str[6] = perm & S_IXGRP ? 'x' : '-';
+	str[7] = perm & S_IROTH ? 'r' : '-';
+	str[8] = perm & S_IWOTH ? 'w' : '-';
+	str[9] = perm & S_IXOTH ? 'x' : '-';
+	mx_push_info_l_back(&(info->info_l), str);
+	free(str);
+}
+
+static void advanced_permissions_check(t_info *info) {
+	acl_t acl;
+	t_info_l *tmp_info_l = info->info_l;
+
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
+		acl = acl_get_file(tmp->path, ACL_TYPE_EXTENDED);
+		if (acl) {
+			tmp_info_l->access[10] = '+';
+			acl_free(acl);
+		}
+		if (listxattr(tmp->path, NULL, 0, XATTR_NOFOLLOW))
+			tmp_info_l->access[10] = '@';
+	}
 }
