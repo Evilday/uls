@@ -3,7 +3,7 @@
 static void default_args(t_info *info);
 
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
-	mx_push_uni_list_back(&(info->sub_args), ".", ".", 0);
+	mx_push_uni_list_back(info, &(info->sub_args), ".", 0);
 	mx_look_sub_argv(info, arg, info->sub_args);
 	mx_pop_uni_list_front(&(info->sub_args));
 	mx_sort_uni_list(info->sub_args);
@@ -20,7 +20,7 @@ void mx_arg_files(t_info *info) { // обробка аргумента, що є 
 	for (int i = 0; i < info->argc; i++) {
 		if (info->where_what[i] == 2) {
 			info->num_of_sub++;
-			mx_push_uni_list_back(&(info->sub_args), info->argv[i], NULL, 0);
+			mx_push_uni_list_back(info, &(info->sub_args), info->argv[i], 0);
 		}
 	}
 	mx_sort_uni_list(info->sub_args);

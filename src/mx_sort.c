@@ -25,7 +25,6 @@ void mx_sort_uni_list(t_uni_list *lst) {
 			for (t_uni_list *temp2 = lst; temp2->next; temp2 = temp2->next)
 				if(mx_strcmp(temp2->data, temp2->next->data) > 0) {
 					mx_swap_str(&temp2->data, &temp2->next->data);
-					mx_swap_str(&temp2->path, &temp2->next->path);
 					temp = temp2->folder;
 					temp2->folder = temp2->next->folder;
 					temp2->next->folder = temp;

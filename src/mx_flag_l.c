@@ -8,7 +8,7 @@ void mx_l_permissions(t_info *info) {
 	struct stat buff;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		lstat(tmp->path, &buff);
+		lstat(tmp->data, &buff);
 		basic_l_permissions(info, buff.st_mode);
 	}
 	advanced_permissions_check(info);
@@ -21,8 +21,8 @@ void mx_date_time_for_l(t_info *info) {
 	char *buf = mx_strnew(260);
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		lstat(tmp2->path, &buff);
-		if (readlink(tmp2->path, buf, 255) > 0) {
+		lstat(tmp2->data, &buff);
+		if (readlink(tmp2->data, buf, 255) > 0) {
 			tmp2->data = mx_realloc(tmp2->data
 			, mx_strlen(buf) + mx_strlen(tmp2->data) + 4);
 			mx_strcat(tmp2->data, " -> ");
@@ -47,7 +47,7 @@ void mx_group_size_for_l(t_info *info) {
 	struct group *grp;
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		lstat(tmp2->path, &buff);
+		lstat(tmp2->data, &buff);
 		info->total_blocks_l += buff.st_blocks;
 		grp = getgrgid(buff.st_gid);
 		tmp->nlink = mx_itoa(buff.st_nlink);
@@ -96,12 +96,12 @@ static void advanced_permissions_check(t_info *info) {
 	t_info_l *tmp_info_l = info->info_l;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
-		acl = acl_get_file(tmp->path, ACL_TYPE_EXTENDED);
+		acl = acl_get_file(tmp->data, ACL_TYPE_EXTENDED);
 		if (acl) {
 			tmp_info_l->access[10] = '+';
 			acl_free(acl);
 		}
-		if (listxattr(tmp->path, NULL, 0, XATTR_NOFOLLOW))
+		if (listxattr(tmp->data, NULL, 0, XATTR_NOFOLLOW))
 			tmp_info_l->access[10] = '@';
 	}
 }

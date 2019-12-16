@@ -34,13 +34,7 @@ static void folder_print(t_info *info) {
 	else {
 		mx_printchar('\n');
 		if (info->num_of_arg > 1 || info->flag_R) {
-			if (info->sub_args) {
-				char *str = mx_up_to_one(info->sub_args->path);
-				if (str) {
-					mx_printstr(str);
-					free(str);
-				}
-			}
+			mx_printstr(info->path);
 			mx_printstr(":");
 			if (info->num_of_sub)
 				mx_printstr("\n");

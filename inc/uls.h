@@ -59,6 +59,8 @@ typedef struct s_info {
 	// char *all_our_flags; // список всіх наших флагів, які нам прийшли
 
 	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
+	char *path; // шлях для sub_args
+
 	int num_of_sub; // кількість елементів в агрументі
 	int max_sub_len; // найдовше слово серед елементів аргумента
 
@@ -126,8 +128,8 @@ void mx_sort_uni_list(t_uni_list *lst);
 int mx_num_of_cols(t_info *info);
 
 // mx_list
-t_uni_list *mx_create_uni_list(char *data, char *path, int folder);
-void mx_push_uni_list_back(t_uni_list **list, void *data, char *path, int f);
+t_uni_list *mx_create_uni_list(t_info *info, char *data, int f);
+void mx_push_uni_list_back(t_info *info, t_uni_list **list, void *data, int f);
 void mx_pop_uni_list_front(t_uni_list **head);
 t_info_l *mx_create_info_l(char *data);
 void mx_push_info_l_back(t_info_l **list, char *data);
