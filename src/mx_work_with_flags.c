@@ -44,8 +44,8 @@ void mx_work_with_flags(t_info *info) {
 static void mx_take_flags_2(t_info *info, bool *our_flags) {
 	if (our_flags[1])
 		info->flag_a = 1;
-	else if (our_flags[2])
+	if (our_flags[2])
 		info->flag_A = 1;
-	else if (our_flags[3])
+	if (our_flags[3])
 		info->flag_R = 1;
 }

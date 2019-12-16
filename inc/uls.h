@@ -104,9 +104,9 @@ void mx_invalid_usage();
 void mx_arg_not_exist(t_info *info);
 
 // mx_print_types
-void mx_basic_print(t_info *info);
-void mx_print_1(t_info *info);
-void mx_print_l(t_info *info);
+void mx_basic_print(t_info *info, bool folder);
+void mx_print_1(t_info *info, bool folder);
+void mx_print_l(t_info *info, bool folder);
 
 // mx_work_with_args
 void mx_work_with_args(t_info *info);

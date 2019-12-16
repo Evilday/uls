@@ -26,6 +26,7 @@ static bool check_sub_argv(t_info *info, char *arg, t_uni_list *where_to_save) {
 	int num_of_sub = 0;
 	struct dirent *d = NULL;
 	DIR *f = NULL;
+	char *path = mx_strjoin(arg, "/");
 
 	if ((f = opendir(arg))) { // намагаємося відкрити агрумент
 		info->path = mx_strdup(arg);
@@ -34,15 +35,16 @@ static bool check_sub_argv(t_info *info, char *arg, t_uni_list *where_to_save) {
 		else {
 			while ((d = readdir(f)))
 				if (d->d_name[0] != '.') {
-					mx_push_uni_list_back(info, &(where_to_save), d->d_name, d->d_type);
-					// mx_push_uni_list_back(&(where_to_save), d->d_name, arg, d->d_type);
+					mx_push_uni_list_back(info, &(where_to_save), mx_strjoin(path, d->d_name), d->d_type);
 					++num_of_sub;
 				}
 			info->num_of_sub = num_of_sub;
 		}
 		closedir(f);
+		free(path);
 		return 1;
 	}
+	free(path);
 	return 0;
 }
 
@@ -55,7 +57,6 @@ static bool else_look_sub_argv(t_info *info, char *arg, char *file, t_uni_list *
 		while((d = readdir(f))) {
 			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
 				mx_push_uni_list_back(info, &(where_to_save), arg, d->d_type);
-				// mx_push_uni_list_back(&(where_to_save), arg, NULL, d->d_type);
 				++num_of_sub;
 			}
 		}
@@ -69,7 +70,6 @@ static bool else_look_sub_argv(t_info *info, char *arg, char *file, t_uni_list *
 		while((d = readdir(f)))
 			if (!mx_strcmp(d->d_name, arg)) {
 				mx_push_uni_list_back(info, &(where_to_save), arg, d->d_type);
-				// mx_push_uni_list_back(&(where_to_save), arg, "./", d->d_type);
 				info->path = mx_strdup(".");
 				info->num_of_sub = 1;
 			}

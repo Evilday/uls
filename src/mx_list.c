@@ -25,6 +25,8 @@ void mx_push_uni_list_back(t_info *info, t_uni_list **list, void *data, int f) {
 		else
 			*list = new_uni_list;
 	}
+	if (malloc_size(data))
+		free(data);
 }
 
 void mx_pop_uni_list_front(t_uni_list **head) {

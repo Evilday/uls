@@ -56,7 +56,7 @@ void mx_group_size_for_l(t_info *info) {
 		else
 			tmp->group_owner = mx_itoa(buff.st_gid);
 		if (buff.st_uid)
-			tmp->login = get_login(buff.st_uid);
+			tmp->login = get_login(buff.st_uid); ///////////////////////
 		else
 			tmp->login = mx_strdup("root");
 		tmp->sym_num = mx_sym_num(tmp->access[0], buff);
