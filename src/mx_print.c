@@ -31,20 +31,19 @@ void mx_print_arg(t_info *info, bool folder) {
 static void folder_print(t_info *info) {
 	if (info->first_argv)
 		info->first_argv = 0;
-	else
+	else {
 		mx_printchar('\n');
-	if (info->num_of_arg > 1) {
-		if (info->sub_args) {
-			char *str = mx_up_to_one(info->sub_args->path);
-			if (str) {
-				mx_printstr(str);
-				free(str);
+		if (info->num_of_arg > 1 || info->flag_R) {
+			if (info->sub_args) {
+				char *str = mx_up_to_one(info->sub_args->path);
+				if (str) {
+					mx_printstr(str);
+					free(str);
+				}
 			}
+			mx_printstr(":");
+			if (info->num_of_sub)
+				mx_printstr("\n");
 		}
-		mx_printstr(":");
-		if (info->num_of_sub)
-			mx_printstr("\n");
 	}
-	else
-		info->num_of_arg = 0;
 }
