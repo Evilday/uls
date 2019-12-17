@@ -1,7 +1,5 @@
 #include "uls.h"
 
-static int list_size(t_uni_list *list);
-
 int mx_num_of_cols(t_info *info) {
 	struct winsize w;
 	int max_len = 0;
@@ -13,21 +11,13 @@ int mx_num_of_cols(t_info *info) {
 			max_len = mx_strlen(tmp->data);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	cols = (w.ws_col / ((8 - (max_len % 8)) + max_len));
-	lines = list_size(info->sub_args) / cols;
-		if (lines == 0 || ((list_size(info->sub_args) % cols) != 0))
+	lines = info->num_of_sub / cols;
+		if (lines == 0 || ((info->num_of_sub % cols) != 0))
 			lines++;
 	info->max_sub_len = max_len;
 	return lines;
 }
 
-static int list_size(t_uni_list *list) {
-	int size = 0;
-
-	if (list)
-		for (t_uni_list *temp = list; temp; temp = temp->next, size++);
-
-	return size;
-}
 /*
 табуляция ширина нашего окна делится (5) 8 
 и остачу прибавить к файлу максимальной длины,
