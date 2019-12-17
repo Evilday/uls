@@ -1,11 +1,10 @@
 #include "uls.h"
 
-// static void print_name(char *name);
+static void basic_tab_print(t_info *info, int arg_len);
 
 void mx_basic_print(t_info *info) {
 	int j;
 	int sub_r;
-	int tab_len = 0;
 	int num_of_lines = mx_num_of_cols(info);
 
 	for (int i = 0; i < num_of_lines; i++) {
@@ -15,8 +14,7 @@ void mx_basic_print(t_info *info) {
 			if ((j + num_of_lines - i) % num_of_lines == 0) {
 				mx_printstr(tmp->data);
 				if (sub_r + num_of_lines < info->num_of_sub) {
-					tab_len = info->max_sub_len - mx_strlen(tmp->data);
-					mx_print_tabs(tab_len + (8 - (info->max_sub_len % 8)));
+					basic_tab_print(info, mx_strlen(tmp->data));
 				}
 			}
 			++sub_r;
@@ -56,16 +54,16 @@ void mx_print_l(t_info *info) {
 	}
 }
 
-// static void print_name(char *name, bool folder) {
-// 	if (folder) {
-// 		int i = mx_strlen(name) - 1;
+static void basic_tab_print(t_info *info, int arg_len) {
+	int max_tabs = info->max_sub_len / 8 + 1;
+	int tab_len = arg_len / 8;
 
-// 		for (; i >= 0; i--)
-// 			if (name[i - 1] == '/' || i == 0) {
-// 				mx_printstr(&name[i]);
-// 				break;
-// 			}
-// 	}
-// 	else
-// 		mx_printstr(name);
-// }
+	if (tab_len < max_tabs) {
+		write(1, "\t", 1);
+		tab_len++;
+	}
+	while (max_tabs > tab_len) {
+		write(1, "\t", 1);
+		tab_len++;
+	}
+}

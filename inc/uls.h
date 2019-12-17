@@ -7,6 +7,7 @@
 
 // Uls
 
+#include <errno.h>
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -102,6 +103,7 @@ void mx_print_arg(t_info *info, bool folder);
 // mx_print_errors
 void mx_invalid_usage();
 void mx_arg_not_exist(t_info *info);
+void mx_is_allowed(char *path);
 
 // mx_print_types
 void mx_basic_print(t_info *info);

@@ -17,9 +17,15 @@ void mx_flag_R(t_info *info, char *arg) {
 			mx_pop_info_l_front(&(info->info_l));
 	for (t_uni_list *tmp = all_inside; tmp; tmp = tmp->next)
 		if (tmp->folder && mx_strcmp(tmp->data, ".") && mx_strcmp(tmp->data, "..")) {
-			adventure = mx_strjoin(path, tmp->data);
+			DIR *f;
 
-			mx_flag_R(info, adventure);
+			adventure = mx_strjoin(path, tmp->data);
+			if ((f = opendir(adventure))) {
+				closedir(f);
+				mx_flag_R(info, adventure);
+			}
+			else
+				mx_is_allowed(adventure);
 			free(adventure);
 		}
 	for (t_uni_list *tmp = all_inside; tmp; tmp = tmp->next)

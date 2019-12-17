@@ -13,7 +13,7 @@ void mx_print_arg(t_info *info, bool folder) {
 	else
 		info->first_argv = 0;
 	if (info->sub_args) {
-		if (info->top_flag == '0' || info->top_flag == 'S')
+		if (info->top_flag == '0' || info->top_flag == 'C')
 			mx_basic_print(info);
 		else if (info->top_flag == 'l') {
 			mx_count_tabs_l(info);

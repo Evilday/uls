@@ -15,7 +15,7 @@ char *mx_up_to_one(char *str) {
 }
 
 bool mx_check_argv(t_info *info, int i) {
-	DIR *f;
+	DIR *f = NULL;
 	struct dirent *d = NULL;
 	char *file;
 
@@ -27,13 +27,20 @@ bool mx_check_argv(t_info *info, int i) {
 	}
 	else {
 		file = mx_up_to_one(info->argv[i]); // обрізаємо уточнення, що це файл
-		if (else_check_argv(info->argv[i], file, f, d)) {
-			free(file);
-			info->file_exist = 1;
-			info->where_what[i] = 2;
-			return 1;
-		}
-		free(file);
+		f = opendir(file);
+		if (f)
+			while ((d = readdir(f)))
+				if (!mx_strcmp(d->d_name, info->argv[i] + (mx_strlen(file) + 1))) {
+					if (d->d_type != 4)
+						if (else_check_argv(info->argv[i], file, f, d)) {
+							free(file);
+							info->file_exist = 1;
+							info->where_what[i] = 2;
+							return 1;
+						}
+					free(file);
+					break;
+				}
 	}
 	return 0;
 }

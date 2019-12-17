@@ -20,7 +20,7 @@ void mx_take_flags(t_info *info) {
 		if (info->where_what[i] == 1)
 			for (int j = 1; info->argv[i][j]; j++) {
 				if (info->argv[i][j] == 'l' || info->argv[i][j] == '1' 
-						|| info->argv[i][j] == 'S')
+						|| info->argv[i][j] == 'C')
 					info->top_flag = info->argv[i][j];
 				else
 					for (int p = 0; all_flags[p]; p++)
