@@ -8,8 +8,11 @@ void mx_l_permissions(t_info *info) {
 	struct stat buff;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		lstat(tmp->data, &buff);
+		char *arg = mx_strjoin(info->path, tmp->data);
+
+		lstat(arg, &buff);
 		basic_l_permissions(info, buff.st_mode);
+		free(arg);
 	}
 	advanced_permissions_check(info);
 }
@@ -21,13 +24,14 @@ void mx_date_time_for_l(t_info *info) {
 	char *buf = mx_strnew(260);
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		lstat(tmp2->data, &buff);
-		if (readlink(tmp2->data, buf, 255) > 0) {
+		char *theOne = mx_strjoin(info->path, tmp2->data);
+
+		lstat(theOne, &buff);
+		if (readlink(theOne, buf, 255) > 0) {
 			tmp2->data = mx_realloc(tmp2->data
 			, mx_strlen(buf) + mx_strlen(tmp2->data) + 4);
 			mx_strcat(tmp2->data, " -> ");
 			mx_strcat(tmp2->data, buf);
-			tmp->access[0] = 'l';
 		}
 		tmp->time_upd = mx_strndup(((ctime)(&buff.st_mtime) + 4), 12);
 		if ((time(0) - buff.st_mtime) > (31536000 / 2)) {
@@ -37,6 +41,7 @@ void mx_date_time_for_l(t_info *info) {
 			free(year);
 		}
 		tmp2 = tmp2->next;
+		free(theOne);
 	}
 	free(buf);
 }
@@ -47,7 +52,10 @@ void mx_group_size_for_l(t_info *info) {
 	struct group *grp;
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		lstat(tmp2->data, &buff);
+		char *theOne = mx_strjoin(info->path, tmp2->data);
+
+		lstat(theOne, &buff);
+		free(theOne);
 		info->total_blocks_l += buff.st_blocks;
 		grp = getgrgid(buff.st_gid);
 		tmp->nlink = mx_itoa(buff.st_nlink);
@@ -55,8 +63,9 @@ void mx_group_size_for_l(t_info *info) {
 			tmp->group_owner = mx_strdup(grp->gr_name);
 		else
 			tmp->group_owner = mx_itoa(buff.st_gid);
-		if (buff.st_uid)
-			tmp->login = get_login(buff.st_uid); ///////////////////////
+		if (buff.st_uid) {
+			tmp->login = get_login(buff.st_uid); ///////////////
+		}
 		else
 			tmp->login = mx_strdup("root");
 		tmp->sym_num = mx_sym_num(tmp->access[0], buff);
@@ -95,13 +104,17 @@ static void advanced_permissions_check(t_info *info) {
 	acl_t acl;
 	t_info_l *tmp_info_l = info->info_l;
 
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, tmp_info_l = tmp_info_l->next) {
-		acl = acl_get_file(tmp->data, ACL_TYPE_EXTENDED);
-		if (acl) {
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next
+		, tmp_info_l = tmp_info_l->next) {
+		char *arg = mx_strjoin(info->path, tmp->data);
+
+		acl = acl_get_file(arg, ACL_TYPE_EXTENDED);
+		if (listxattr(arg, NULL, 0, XATTR_NOFOLLOW) > 0)
+				tmp_info_l->access[10] = '@';
+		else if (acl) {
 			tmp_info_l->access[10] = '+';
 			acl_free(acl);
 		}
-		if (listxattr(tmp->data, NULL, 0, XATTR_NOFOLLOW))
-			tmp_info_l->access[10] = '@';
+		free(arg);
 	}
 }

@@ -7,7 +7,7 @@ static char *check_minor(unsigned int rdev);
 void mx_count_tabs_l(t_info *info) {
 	t_tabs_l *tabs_l = (t_tabs_l *)malloc(sizeof(t_tabs_l));
 	tabs_l->l_nlink = tabs_l->l_login = tabs_l->l_group_owner
-	= tabs_l->l_sym_num = tabs_l->l_time_upd = 0;
+		= tabs_l->l_sym_num = tabs_l->l_time_upd = 0;
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
 		if (mx_strlen(tmp->nlink) > tabs_l->l_nlink)

@@ -12,6 +12,7 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->folder_exist = 0;
 	info->where_what = (int *)malloc(sizeof(int) * argc);
 	info->sub_args = NULL;
+	info->path = NULL;
 	info->info_l = NULL;
 	info->tabs_l = NULL;
 	info->num_of_sub = 0;

@@ -1,8 +1,8 @@
 #include "uls.h"
 
-static void print_name(char *name, bool folder);
+// static void print_name(char *name);
 
-void mx_basic_print(t_info *info, bool folder) {
+void mx_basic_print(t_info *info) {
 	int j;
 	int sub_r;
 	int tab_len = 0;
@@ -13,10 +13,9 @@ void mx_basic_print(t_info *info, bool folder) {
 		sub_r = 0;
 		for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, j++) {
 			if ((j + num_of_lines - i) % num_of_lines == 0) {
-				print_name(tmp->data, folder);
+				mx_printstr(tmp->data);
 				if (sub_r + num_of_lines < info->num_of_sub) {
-					tab_len = info->max_sub_len - mx_strlen(tmp->data) 
-					+ mx_strlen(info->path) + 1;
+					tab_len = info->max_sub_len - mx_strlen(tmp->data);
 					mx_print_tabs(tab_len + (8 - (info->max_sub_len % 8)));
 				}
 			}
@@ -26,14 +25,14 @@ void mx_basic_print(t_info *info, bool folder) {
 	}
 }
 
-void mx_print_1(t_info *info, bool folder) {
+void mx_print_1(t_info *info) {
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		print_name(tmp->data, folder);
+		mx_printstr(tmp->data);
 		mx_printchar('\n');
 	}
 }
 
-void mx_print_l(t_info *info, bool folder) {
+void mx_print_l(t_info *info) {
 	t_uni_list *t2 = info->sub_args;
 	t_tabs_l *tmp3 = info->tabs_l;
 
@@ -52,19 +51,21 @@ void mx_print_l(t_info *info, bool folder) {
 		mx_print_tabs(1);
 		mx_printstr(tmp->time_upd);
 		mx_print_tabs(tmp3->l_time_upd - mx_strlen(tmp->time_upd) + 1);
-		print_name(t2->data, folder);
+		mx_printstr(t2->data);
 		mx_printchar('\n');
 	}
 }
 
-static void print_name(char *name, bool folder) {
-	if (folder) {
-		for (int i = mx_strlen(name) - 1; i >= 0; i--)
-			if (name[i - 1] == '/' || i == 0) {
-				mx_printstr(&name[i]);
-				break;
-			}
-	}
-	else
-		mx_printstr(name);
-}
+// static void print_name(char *name, bool folder) {
+// 	if (folder) {
+// 		int i = mx_strlen(name) - 1;
+
+// 		for (; i >= 0; i--)
+// 			if (name[i - 1] == '/' || i == 0) {
+// 				mx_printstr(&name[i]);
+// 				break;
+// 			}
+// 	}
+// 	else
+// 		mx_printstr(name);
+// }
