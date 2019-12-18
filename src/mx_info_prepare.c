@@ -18,7 +18,8 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->num_of_sub = 0;
 	info->max_sub_len = 0;
 	info->total_blocks_l = 0;
-	info->top_flag = '0';
+	info->print_flag = '0';
+	info->sort_flag = '0';
 	info->flag_a = 0;
 	info->flag_A = 0;
 	info->flag_R = 0;

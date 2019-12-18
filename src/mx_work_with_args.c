@@ -6,7 +6,7 @@ void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
 	mx_push_uni_list_back(info, &(info->sub_args), ".", 0);
 	mx_look_sub_argv(info, arg, info->sub_args);
 	mx_pop_uni_list_front(&(info->sub_args));
-	mx_sort_uni_list(info->sub_args);
+	mx_sort_uni_list(info, info->sub_args);
 	if (info->flags_exist)
 		mx_work_with_flags(info);
 	mx_print_arg(info, folder);
@@ -23,14 +23,12 @@ void mx_arg_files(t_info *info) { // обробка аргумента, що є 
 			mx_push_uni_list_back(info, &(info->sub_args), info->argv[i], 0);
 		}
 	}
-	mx_sort_uni_list(info->sub_args);
+	mx_sort_uni_list(info, info->sub_args);
 	if (info->flags_exist)
 		mx_work_with_flags(info);
 	mx_print_arg(info, 0);
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next)
 		mx_pop_uni_list_front(&(info->sub_args));
-	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next)
-		mx_pop_info_l_front(&(info->info_l));
 }
 
 void mx_arg_folders(t_info *info) { // обробка аргумента, що є папкою

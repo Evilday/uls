@@ -13,9 +13,9 @@ void mx_print_arg(t_info *info, bool folder) {
 	else
 		info->first_argv = 0;
 	if (info->sub_args) {
-		if (info->top_flag == '0' || info->top_flag == 'C')
+		if (info->print_flag == '0' || info->print_flag == 'C')
 			mx_basic_print(info);
-		else if (info->top_flag == 'l') {
+		else if (info->print_flag == 'l') {
 			mx_count_tabs_l(info);
 			if (folder) {
 				mx_printstr("total ");
@@ -24,7 +24,7 @@ void mx_print_arg(t_info *info, bool folder) {
 			}
 			mx_print_l(info);
 		}
-		else if (info->top_flag == '1') {
+		else if (info->print_flag == '1') {
 			mx_print_1(info);
 		}
 	}

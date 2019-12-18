@@ -22,9 +22,10 @@ void mx_date_time_for_l(t_info *info) {
 	t_uni_list *tmp2 = info->sub_args;
 	char *year;
 	char *buf = mx_strnew(260);
+	char *theOne;
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
-		char *theOne = mx_strjoin(info->path, tmp2->data);
+		theOne = mx_strjoin(info->path, tmp2->data);
 
 		lstat(theOne, &buff);
 		if (readlink(theOne, buf, 255) > 0) {
@@ -63,20 +64,21 @@ void mx_group_size_for_l(t_info *info) {
 			tmp->group_owner = mx_strdup(grp->gr_name);
 		else
 			tmp->group_owner = mx_itoa(buff.st_gid);
-		if (buff.st_uid) {
-			tmp->login = get_login(buff.st_uid); ///////////////
-		}
-		else
-			tmp->login = mx_strdup("root");
+		tmp->login = get_login(buff.st_uid);
 		tmp->sym_num = mx_sym_num(tmp->access[0], buff);
 		tmp2 = tmp2->next;
 	}
 }
 
 static char *get_login(uid_t st_uid) {
+	char *user = (char *)malloc(256);
 	struct passwd *pw = getpwuid(st_uid);
 
-	return pw->pw_name;
+	if (pw == NULL)
+		user = mx_itoa(st_uid);
+	else
+		mx_strcpy(user, pw->pw_name);
+	return user;
 }
 
 static void basic_l_permissions(t_info *info, unsigned long perm) {
@@ -96,6 +98,7 @@ static void basic_l_permissions(t_info *info, unsigned long perm) {
 	str[7] = perm & S_IROTH ? 'r' : '-';
 	str[8] = perm & S_IWOTH ? 'w' : '-';
 	str[9] = perm & S_IXOTH ? 'x' : '-';
+	perm & S_ISTXT ? str[9] = 't' : 0;
 	mx_push_info_l_back(&(info->info_l), str);
 	free(str);
 }

@@ -1,6 +1,7 @@
 #include "uls.h"
 
-// for flag l
+static void swap_links(t_info_l *currX, t_info_l *currY);
+
 t_info_l *mx_create_info_l(char *data) {
 	t_info_l *new_info_l = (t_info_l *)malloc(sizeof(t_info_l));
 
@@ -50,4 +51,35 @@ void mx_pop_info_l_front(t_info_l **head) {
 		*head = temp->next;
 		free(temp);
 	}
+}
+
+void mx_swap_l(t_info *info, int x, int y) {
+	int pos = 0;
+	t_info_l *prevX = NULL;
+	t_info_l *currX = info->info_l;
+	t_info_l *prevY = NULL;
+	t_info_l *currY = info->info_l;
+
+	while (currX && pos++ != x) {
+		prevX = currX;
+		currX = currX->next;
+	}
+	pos = 0;
+	while (currY && pos++ != y) { 
+		prevY = currY; 
+		currY = currY->next; 
+	}
+	if (prevX)
+		prevX->next = currY;
+	else
+		info->info_l = currY;
+	prevY->next = currX;
+	swap_links(currX, currY);
+}
+
+static void swap_links(t_info_l *currX, t_info_l *currY) {
+	t_info_l *temp = currY->next;
+
+	currY->next = currX->next;
+	currX->next = temp;
 }

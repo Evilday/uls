@@ -21,7 +21,9 @@ void mx_take_flags(t_info *info) {
 			for (int j = 1; info->argv[i][j]; j++) {
 				if (info->argv[i][j] == 'l' || info->argv[i][j] == '1' 
 						|| info->argv[i][j] == 'C')
-					info->top_flag = info->argv[i][j];
+					info->print_flag = info->argv[i][j];
+				else if (info->argv[i][j] == 't')
+					info->sort_flag = info->argv[i][j];
 				else
 					for (int p = 0; all_flags[p]; p++)
 						if (all_flags[p] == info->argv[i][j])
@@ -33,12 +35,16 @@ void mx_take_flags(t_info *info) {
 }
 
 void mx_work_with_flags(t_info *info) {
-	if (info->top_flag == 'l') {
+	if (info->print_flag == 'l') {
 		mx_l_flag(info);
 	}
-	else if (info->top_flag == '1') {
+	else if (info->print_flag == '1') {
 		//
 	}
+	if (info->sort_flag != '0')
+		mx_sort_with_flags(info);
+	if (info->flag_r)
+		mx_rotate(info);
 }
 
 static void mx_take_flags_2(t_info *info, bool *our_flags) {
@@ -48,4 +54,6 @@ static void mx_take_flags_2(t_info *info, bool *our_flags) {
 		info->flag_A = 1;
 	if (our_flags[3])
 		info->flag_R = 1;
+	if (our_flags[11])
+		info->flag_r = 1;
 }

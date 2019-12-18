@@ -57,8 +57,6 @@ typedef struct s_info {
 
 	int *where_what; // 0 - не валідна, 1 - флажок, 2 - файл, 3 - папка, 4 - ігнор
 
-	// char *all_our_flags; // список всіх наших флагів, які нам прийшли
-
 	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
 	char *path; // шлях для sub_args
 
@@ -69,7 +67,8 @@ typedef struct s_info {
 	struct s_tabs_l *tabs_l; // кількість пробілів для кожного елементу флага l при виводі
 	int total_blocks_l;
 
-	char top_flag; // type for print (l, 1, S)
+	char print_flag; // type for print (l, 1, S)
+	char sort_flag; // type for print (l, 1, S)
 	bool flag_a;
 	bool flag_A;
 	bool flag_R;
@@ -110,6 +109,9 @@ void mx_basic_print(t_info *info);
 void mx_print_1(t_info *info);
 void mx_print_l(t_info *info);
 
+// mx_clear_all
+void mx_clear_all(t_info *info);
+
 // mx_work_with_args
 void mx_work_with_args(t_info *info);
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder);
@@ -124,7 +126,10 @@ void mx_take_flags(t_info *info);
 
 // mx_sort
 void mx_sort_args(t_info *info);
-void mx_sort_uni_list(t_uni_list *lst);
+void mx_sort_uni_list(t_info *info, t_uni_list *lst);
+void mx_sort_with_flags(t_info *info);
+void mx_rotate(t_info *info);
+void mx_flag_t(t_info *info);
 
 // mx_window.c
 int mx_num_of_cols(t_info *info);
@@ -133,9 +138,13 @@ int mx_num_of_cols(t_info *info);
 t_uni_list *mx_create_uni_list(t_info *info, char *data, int f);
 void mx_push_uni_list_back(t_info *info, t_uni_list **list, void *data, int f);
 void mx_pop_uni_list_front(t_uni_list **head);
+void mx_swap_uni_list(t_info *info, int x, int y);
+
+//mx_list_2
 t_info_l *mx_create_info_l(char *data);
 void mx_push_info_l_back(t_info_l **list, char *data);
 void mx_pop_info_l_front(t_info_l **head);
+void mx_swap_l(t_info *info, int x, int y);
 
 // mx_flags_a_A
 void mx_look_sub_argv_2(t_info *info, DIR *f, t_uni_list *where_to_save);
