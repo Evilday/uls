@@ -1,6 +1,7 @@
 #include "uls.h"
 
-static void mx_take_flags_2(t_info *info, bool *our_flags);
+static void take_flags_2(t_info *info, bool *our_flags);
+static void on_off_flags(t_info *info);
 
 void mx_l_flag(t_info *info) {
 	info->total_blocks_l = 0;
@@ -11,7 +12,7 @@ void mx_l_flag(t_info *info) {
 
 void mx_take_flags(t_info *info) {
 	bool *our_flags = (bool *)malloc(17);
-	char all_flags[17] = "laARGh@eT1CrtucS\0";
+	char all_flags[18] = "laARGh@eT1CrtucSf\0";
 	int i;
 
 	for (i = 0; i < 17; i++)
@@ -32,7 +33,9 @@ void mx_take_flags(t_info *info) {
 							our_flags[p] = 1;
 			}
 	}
-	mx_take_flags_2(info, our_flags);
+	take_flags_2(info, our_flags);
+	if (info->flag_f)
+		on_off_flags(info);
 	free(our_flags);
 }
 
@@ -49,7 +52,7 @@ void mx_work_with_flags(t_info *info) {
 		mx_rotate(info);
 }
 
-static void mx_take_flags_2(t_info *info, bool *our_flags) {
+static void take_flags_2(t_info *info, bool *our_flags) {
 	if (our_flags[1])
 		info->flag_a = 1;
 	if (our_flags[2])
@@ -60,4 +63,14 @@ static void mx_take_flags_2(t_info *info, bool *our_flags) {
 		info->flag_T = 1;
 	if (our_flags[11])
 		info->flag_r = 1;
+	if (our_flags[16])
+		info->flag_f = 1;
+}
+
+static void on_off_flags(t_info *info) {
+	info->flag_l = 0;
+	info->flag_t = 0;
+	info->flag_s = 0;
+	info->flag_r = 0;
+	info->flag_a = 1;
 }
