@@ -69,6 +69,7 @@ typedef struct s_info {
 
 	char print_flag; // type for print (l, 1, S)
 	char sort_flag; // type for print (l, 1, S)
+	char time_flag; // time type for l (u, 0, c)
 	bool flag_a;
 	bool flag_A;
 	bool flag_R;
@@ -80,8 +81,6 @@ typedef struct s_info {
 	bool flag_C;
 	bool flag_r;
 	bool flag_t;
-	bool flag_u;
-	bool flag_c;
 } t_info;
 
 // mx_check_errors
@@ -131,6 +130,9 @@ void mx_sort_with_flags(t_info *info);
 void mx_rotate(t_info *info);
 void mx_flag_t(t_info *info);
 
+// mx_sort_2
+void mx_flag_S(t_info *info);
+
 // mx_window.c
 int mx_num_of_cols(t_info *info);
 
@@ -151,12 +153,16 @@ void mx_look_sub_argv_2(t_info *info, DIR *f, t_uni_list *where_to_save);
 
 // mx_flag_l
 void mx_l_permissions(t_info *info);
-void mx_date_time_for_l(t_info *info);
-void mx_group_size_for_l(t_info *info);
+char mx_get_type(struct stat file_stat);
 
 // mx_flag_l_2
+void mx_group_size_for_l(t_info *info);
 void mx_count_tabs_l(t_info *info);
+void mx_date_time_for_l(t_info *info);
+
+// mx_flag_l_3
 char *mx_sym_num(char access, struct stat buff);
+void mx_advanced_permissions_check(t_info *info);
 
 // mx_flag_R
 void mx_flag_R(t_info *info, char *arg);

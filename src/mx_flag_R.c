@@ -19,23 +19,38 @@ void mx_flag_R(t_info *info, char *arg) {
 		mx_pop_uni_list_front(&(all_inside));
 }
 
+// static void is_link(t_info *info, char *full_name) {
+// 	char *buf = mx_strnew(256);
+
+// 	theOne = mx_strjoin(str, data);
+// 	if (readlink(full_name, buf, 256) > 0) {
+// 		if ((f = opendir(buf))) {
+// 			closedir(f);
+// 			mx_flag_R(info, buf);
+// 		}
+// 	}
+// 	free(buf);
+// }
+
 static void flag_R_check_folder(t_info *info, char *arg, t_uni_list *check) {
 	char *path = mx_strjoin(arg, "/");
 	char *adventure = NULL;
 
 	for (t_uni_list *tmp = check; tmp; tmp = tmp->next)
+		adventure = mx_strjoin(path, tmp->data);
 		if (tmp->folder && mx_strcmp(tmp->data, ".") 
 			&& mx_strcmp(tmp->data, "..")) {
 			DIR *f;
 
-			adventure = mx_strjoin(path, tmp->data);
 			if ((f = opendir(adventure))) {
 				closedir(f);
 				mx_flag_R(info, adventure);
 			}
 			else
 				mx_is_allowed(adventure);
-			free(adventure);
 		}
+		// else
+		// 	is_link(info, adventure);
+		free(adventure);
 	free(path);
 }

@@ -31,8 +31,6 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->flag_C = 0;
 	info->flag_r = 0;
 	info->flag_t = 0;
-	info->flag_u = 0;
-	info->flag_c = 0;
 	for (int i = 0; i < argc; i++)
 		info->where_what[i] = 0;
 	return info;

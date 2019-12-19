@@ -5,6 +5,8 @@ static unsigned long *save_time(t_info *info);
 void mx_sort_with_flags(t_info *info) {
 	if (info->sort_flag == 't')
 		mx_flag_t(info);
+	else if (info->sort_flag == 'S')
+		mx_flag_S(info);
 }
 
 void mx_sort_args(t_info *info) {
@@ -72,7 +74,12 @@ static unsigned long *save_time(t_info *info) {
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, i++) {
 		arg = mx_strjoin(info->path, tmp->data);
 		lstat(arg, &time_struct);
-		time_all[i] = time(0) - time_struct.st_mtime;
+		if (info->time_flag == 'u')
+			time_all[i] = time(0) - time_struct.st_atime;
+		else if (info->time_flag == 'c')
+			time_all[i] = time(0) - time_struct.st_ctime;
+		else
+			time_all[i] = time(0) - time_struct.st_ctime;
 		free(arg);
 	}
 	return time_all;
