@@ -3,7 +3,7 @@
 static char *get_login(uid_t st_uid);
 static char *time_format(t_info *info, struct stat buff);
 
-void mx_group_size_for_l(t_info *info) {
+void mx_take_group_and_size_for_l(t_info *info) {
 	struct stat buff;
 	t_uni_list *tmp2 = info->sub_args;
 	struct group *grp;
@@ -21,7 +21,7 @@ void mx_group_size_for_l(t_info *info) {
 		else
 			tmp->group_owner = mx_itoa(buff.st_gid);
 		tmp->login = get_login(buff.st_uid);
-		tmp->sym_num = mx_sym_num(tmp->access[0], buff);
+		tmp->size = mx_block_size(tmp, buff);
 		tmp2 = tmp2->next;
 	}
 }
@@ -29,7 +29,7 @@ void mx_group_size_for_l(t_info *info) {
 void mx_count_tabs_l(t_info *info) {
 	t_tabs_l *tabs_l = (t_tabs_l *)malloc(sizeof(t_tabs_l));
 	tabs_l->l_nlink = tabs_l->l_login = tabs_l->l_group_owner
-		= tabs_l->l_sym_num = tabs_l->l_time_upd = 0;
+		= tabs_l->l_size = tabs_l->l_time_upd = 0;
 
 	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
 		if (mx_strlen(tmp->nlink) > tabs_l->l_nlink)
@@ -38,8 +38,8 @@ void mx_count_tabs_l(t_info *info) {
 			tabs_l->l_login = mx_strlen(tmp->login);
 		if (mx_strlen(tmp->group_owner) > tabs_l->l_group_owner)
 			tabs_l->l_group_owner = mx_strlen(tmp->group_owner);
-		if (mx_strlen(tmp->sym_num) > tabs_l->l_sym_num && mx_strlen(tmp->sym_num) < 9)
-			tabs_l->l_sym_num = mx_strlen(tmp->sym_num);
+		if (!tmp->minor_major && mx_strlen(tmp->size) > tabs_l->l_size)
+			tabs_l->l_size = mx_strlen(tmp->size);
 		if (mx_strlen(tmp->time_upd) > tabs_l->l_time_upd)
 			tabs_l->l_time_upd = mx_strlen(tmp->time_upd);
 	}
@@ -63,7 +63,6 @@ void mx_date_time_for_l(t_info *info) {
 static char *time_format(t_info *info, struct stat buff) {
 	char *time_result;
 	long time_format;
-	char *year;
 
 	if (info->time_flag == 'u')
 		time_format = buff.st_atime;
@@ -71,17 +70,19 @@ static char *time_format(t_info *info, struct stat buff) {
 		time_format = buff.st_ctime;
 	else
 		time_format = buff.st_mtime;
-	if (info->flag_T) {
+	if (info->flag_T)
 		time_result = mx_strndup(((ctime)(&time_format) + 4), 20);
-	}
 	else {
-		time_result = mx_strndup(((ctime)(&time_format) + 4), 12);
 		if ((time(0) - time_format) > (31536000 / 2)) {
-			year = mx_itoa(1970 + (time_format / 31536000));
-			mx_strcpy(&(time_result[8]), year);
-			time_result[7] = ' ';
-			free(year);
+			char *time_check = mx_strndup(((ctime)(&time_format) + 4), 20);
+
+			time_result = mx_strnew(12);
+			mx_strncpy(time_result, time_check, 7);
+			mx_strcat(time_result, time_check + 15);
+			free(time_check);
 		}
+		else
+			time_result = mx_strndup(((ctime)(&time_format) + 4), 12);
 	}
 	return time_result;
 }

@@ -8,7 +8,6 @@ void mx_start(t_info *info) {
 			if (info->where_what[i] == 2 || info->where_what[i] == 3 
 				|| info->where_what[i] == 0)
 				info->num_of_arg++;
-		mx_sort_args(info);
 		mx_work_with_args(info);
 	}
 }

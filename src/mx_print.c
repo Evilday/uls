@@ -1,6 +1,7 @@
 #include "uls.h"
 
 static void folder_print(t_info *info);
+static void check_flag_h(t_info *info);
 
 void mx_print_tabs(int n) {
 	for (int i = 0; i < n; i++)
@@ -12,6 +13,8 @@ void mx_print_arg(t_info *info, bool folder) {
 		folder_print(info);
 	else
 		info->first_argv = 0;
+	if (info->flag_h)
+		check_flag_h(info);
 	if (info->sub_args) {
 		if (info->print_flag == '0' || info->print_flag == 'C')
 			mx_basic_print(info);
@@ -24,9 +27,10 @@ void mx_print_arg(t_info *info, bool folder) {
 			}
 			mx_print_l(info);
 		}
-		else if (info->print_flag == '1') {
+		else if (info->print_flag == '1')
 			mx_print_1(info);
-		}
+		else if (info->print_flag == 'm')
+			mx_print_semicoma(info);
 	}
 }
 
@@ -40,4 +44,19 @@ static void folder_print(t_info *info) {
 	}
 	if (info->first_argv)
 		info->first_argv = 0;
+}
+
+static void check_flag_h(t_info *info) {
+	char *temp_str;
+
+	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next)
+		if (tmp->minor_major)
+			return;
+	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next) {
+		temp_str = mx_flag_h(tmp->size);
+		// free(tmp->size);
+		tmp->size = mx_strdup(temp_str);
+		free(temp_str);
+	}
+	// info->tabs_l->l_size += 1; (тут хуйня !!!!)
 }

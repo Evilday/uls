@@ -10,10 +10,9 @@ void mx_work_with_one_arg(t_info *info, char *arg, bool folder) {
 	if (info->flags_exist)
 		mx_work_with_flags(info);
 	mx_print_arg(info, folder);
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next)
+	while (info->sub_args)
 		mx_pop_uni_list_front(&(info->sub_args));
-	for (t_info_l *tmp = info->info_l; tmp; tmp = tmp->next)
-		mx_pop_info_l_front(&(info->info_l));
+	mx_clear_all(info);
 }
 
 void mx_arg_files(t_info *info) { // обробка аргумента, що є файлом
@@ -43,9 +42,10 @@ void mx_arg_folders(t_info *info) { // обробка аргумента, що �
 }
 
 void mx_work_with_args(t_info *info) {
-	mx_arg_not_exist(info);
 	if (info->flags_exist)
 		mx_take_flags(info);
+	mx_sort_args(info);
+	mx_arg_not_exist(info);
 	if (info->file_exist || info->folder_exist) {
 		if (info->file_exist)
 			mx_arg_files(info);

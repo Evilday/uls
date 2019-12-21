@@ -7,3 +7,8 @@ int main(int argc, char *argv[]) {
 	// system("leaks uls");
 	return 0;
 }
+
+// check what's wrong in S
+// work with files
+// flag -G
+// аудитор

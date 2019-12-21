@@ -1,33 +1,35 @@
 #include "uls.h"
 
-static unsigned long *save_time(t_info *info);
-
-void mx_sort_with_flags(t_info *info) {
-	if (info->sort_flag == 't')
-		mx_flag_t(info);
-	else if (info->sort_flag == 'S')
-		mx_flag_S(info);
-}
+static void mx_sort_args_flag_f(t_info *info);
+static void mx_sort_uni_list_flag_f(t_uni_list *lst);
+static int alpha_num_diff(char *s1, char *s2);
 
 void mx_sort_args(t_info *info) {
-	char *temp_str;
-	int temp_id;
-	for (int i = 0; info->argv[i]; i++) {
-		for (int j = 0; info->argv[j + 1 + i]; j++) {
-			if (mx_strcmp(info->argv[j], info->argv[j + 1]) > 0) {
-				temp_str = info->argv[j];
-				temp_id = info->where_what[j];
-				info->argv[j] = info->argv[j + 1];
-				info->where_what[j] = info->where_what[j + 1];
-				info->argv[j + 1] = temp_str;
-				info->where_what[j + 1] = temp_id;
+	if (!info->flag_f) {
+		char *temp_str;
+		int temp_id;
+
+		for (int i = 0; info->argv[i]; i++) {
+			for (int j = 0; info->argv[j + 1 + i]; j++) {
+				if (mx_strcmp(info->argv[j], info->argv[j + 1]) > 0) {
+					temp_str = info->argv[j];
+					temp_id = info->where_what[j];
+					info->argv[j] = info->argv[j + 1];
+					info->where_what[j] = info->where_what[j + 1];
+					info->argv[j + 1] = temp_str;
+					info->where_what[j + 1] = temp_id;
+				}
 			}
 		}
 	}
+	else
+		mx_sort_args_flag_f(info);
 }
 
 void mx_sort_uni_list(t_info *info, t_uni_list *lst) {
-	if (info->sort_flag == '0') {
+	if (info->flag_f)
+		mx_sort_uni_list_flag_f(lst);
+	else if (info->sort_flag == '0') {
 		bool temp;
 
 		if (lst)
@@ -42,45 +44,49 @@ void mx_sort_uni_list(t_info *info, t_uni_list *lst) {
 	}
 }
 
-void mx_flag_t(t_info *info) {
-	int elem = 0;
-	unsigned long *time_all = save_time(info);
-	unsigned long temp;
+static void mx_sort_args_flag_f(t_info *info) {
+	char *temp_str;
+	int temp_id;
 
-	for (int i = 1; i < info->num_of_sub; i++) {
-		elem = 0;
-		for (int j = 0; j < info->num_of_sub - i; j++) {
-			if (time_all[j] > time_all[j + 1]) {
-				mx_swap_uni_list(info, elem, elem + 1);
-				if (info->print_flag == 'l')
-					mx_swap_l(info, elem, elem + 1);
-				temp = time_all[j];
-				time_all[j] = time_all[j + 1];
-				time_all[j + 1] = temp;
+	for (int i = 0; info->argv[i]; i++) {
+		for (int j = 0; info->argv[j + 1 + i]; j++) {
+			if (alpha_num_diff(info->argv[j], info->argv[j + 1]) > 0) {
+				temp_str = info->argv[j];
+				temp_id = info->where_what[j];
+				info->argv[j] = info->argv[j + 1];
+				info->where_what[j] = info->where_what[j + 1];
+				info->argv[j + 1] = temp_str;
+				info->where_what[j + 1] = temp_id;
 			}
-			elem++;
 		}
 	}
-	free(time_all);
 }
 
-static unsigned long *save_time(t_info *info) {
-	unsigned long *time_all = (unsigned long 
-		*)malloc(sizeof(unsigned long) * info->num_of_sub);
-	struct stat time_struct;
-	char *arg;
-	int i = 0;
+static void mx_sort_uni_list_flag_f(t_uni_list *lst) {
+	bool temp;
 
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, i++) {
-		arg = mx_strjoin(info->path, tmp->data);
-		lstat(arg, &time_struct);
-		if (info->time_flag == 'u')
-			time_all[i] = time(0) - time_struct.st_atime;
-		else if (info->time_flag == 'c')
-			time_all[i] = time(0) - time_struct.st_ctime;
-		else
-			time_all[i] = time(0) - time_struct.st_ctime;
-		free(arg);
+	if (lst)
+		for (t_uni_list *temp1 = lst; temp1; temp1 = temp1->next)
+			for (t_uni_list *temp2 = lst; temp2->next; temp2 = temp2->next)
+				if(alpha_num_diff(temp2->data, temp2->next->data) > 0) {
+					mx_swap_str(&temp2->data, &temp2->next->data);
+					temp = temp2->folder;
+					temp2->folder = temp2->next->folder;
+					temp2->next->folder = temp;
+				}
+}
+
+static int alpha_num_diff(char *s1, char *s2) {
+	int n1;
+	int n2;
+
+	while (*s1 || *s2) {
+		if (*s1 != *s2)
+			break;
+		s1++;
+		s2++;
 	}
-	return time_all;
+	n1 = *s1 >= 65 && *s1 <= 90 ? *s1 - 65 : *s1 - 97;
+	n2 = *s2 >= 65 && *s2 <= 90 ? *s2 - 65 : *s2 - 97;
+	return n1 - n2;
 }

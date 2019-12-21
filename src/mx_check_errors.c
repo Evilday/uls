@@ -46,7 +46,7 @@ bool mx_check_argv(t_info *info, int i) {
 }
 
 bool mx_check_flags(t_info *info, int i) {
-	char all_flags[17] = "laARGh@eT1CrtucS\0";
+	char all_flags[20] = "laARGh@eT1CrtucSmfp\0";
 
 	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {

@@ -20,6 +20,7 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->total_blocks_l = 0;
 	info->print_flag = '0';
 	info->sort_flag = '0';
+	info->p_F_flag = '0';
 	info->flag_a = 0;
 	info->flag_A = 0;
 	info->flag_R = 0;
@@ -31,6 +32,7 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->flag_C = 0;
 	info->flag_r = 0;
 	info->flag_t = 0;
+	info->flag_f = 0;
 	for (int i = 0; i < argc; i++)
 		info->where_what[i] = 0;
 	return info;

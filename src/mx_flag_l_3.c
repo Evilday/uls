@@ -23,23 +23,25 @@ void mx_advanced_permissions_check(t_info *info) {
 	}
 }
 
-char *mx_sym_num(char access, struct stat buff) {
-	char *sym_num = NULL;
+char *mx_block_size(t_info_l *info_l, struct stat buff) {
+	char *size = NULL;
 	char *major = NULL;
 	char *minor = NULL;
 
-	if (access == 'b' || access == 'c') {
-		sym_num = get_major(buff.st_rdev);
-		major = mx_strjoin(sym_num, ", ");
-		free(sym_num);
+	if (info_l->access[0] == 'b' || info_l->access[0] == 'c') {
+		size = get_major(buff.st_rdev);
+		major = mx_strjoin(size, ", ");
+		free(size);
 		minor = get_minor(buff.st_rdev);
-		sym_num = mx_strjoin(major, minor);
+		if (mx_strlen(minor) > 3)
+			info_l->minor_major = 1;
+		size = mx_strjoin(major, minor);
 		free(major);
 		free(minor);
 	}
 	else
-		sym_num = mx_itoa(buff.st_size);
-	return sym_num;
+		size = mx_itoa(buff.st_size);
+	return size;
 }
 
 static char *get_major (unsigned int rdev) {

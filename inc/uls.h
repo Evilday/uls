@@ -24,7 +24,7 @@ typedef struct s_tabs_l {
 	int l_nlink;
 	int l_login;
 	int l_group_owner;
-	int l_sym_num;
+	int l_size;
 	int l_time_upd;
 } t_tabs_l;
 
@@ -40,8 +40,9 @@ typedef struct s_info_l {
 	char *nlink;
 	char *login;
 	char *group_owner;
-	char *sym_num;
+	char *size;
 	char *time_upd;
+	bool minor_major;
 	struct s_info_l *next;
 } t_info_l;
 
@@ -70,6 +71,7 @@ typedef struct s_info {
 	char print_flag; // type for print (l, 1, S)
 	char sort_flag; // type for print (l, 1, S)
 	char time_flag; // time type for l (u, 0, c)
+	char p_F_flag; // time type for l (u, 0, c)
 	bool flag_a;
 	bool flag_A;
 	bool flag_R;
@@ -81,6 +83,7 @@ typedef struct s_info {
 	bool flag_C;
 	bool flag_r;
 	bool flag_t;
+	bool flag_f;
 } t_info;
 
 // mx_check_errors
@@ -107,6 +110,9 @@ void mx_is_allowed(char *path);
 void mx_basic_print(t_info *info);
 void mx_print_1(t_info *info);
 void mx_print_l(t_info *info);
+
+// mx_print_types_2
+void mx_print_semicoma(t_info *info);
 
 // mx_clear_all
 void mx_clear_all(t_info *info);
@@ -154,17 +160,28 @@ void mx_look_sub_argv_2(t_info *info, DIR *f, t_uni_list *where_to_save);
 // mx_flag_l
 void mx_l_permissions(t_info *info);
 char mx_get_type(struct stat file_stat);
+char mx_get_char(int mode, int is_exec, int is_id);
+char mx_get_mode(int mode, int user_type);
 
 // mx_flag_l_2
-void mx_group_size_for_l(t_info *info);
+void mx_take_group_and_size_for_l(t_info *info);
 void mx_count_tabs_l(t_info *info);
 void mx_date_time_for_l(t_info *info);
 
 // mx_flag_l_3
-char *mx_sym_num(char access, struct stat buff);
+char *mx_block_size(t_info_l *info_l, struct stat buff);
 void mx_advanced_permissions_check(t_info *info);
 
 // mx_flag_R
 void mx_flag_R(t_info *info, char *arg);
+
+// mx_flags_p_F
+void mx_flag_p_or_F(t_info *info, t_uni_list *arg);
+
+// mx_flag_h
+char *mx_flag_h(char *size);
+
+// mx_your_atoi
+long long int my_atoi(const char *str);
 
 #endif
