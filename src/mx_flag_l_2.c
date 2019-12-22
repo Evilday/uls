@@ -44,6 +44,8 @@ void mx_count_tabs_l(t_info *info) {
 			tabs_l->l_time_upd = mx_strlen(tmp->time_upd);
 	}
 	info->tabs_l = tabs_l;
+	if (info->flag_h)
+		info->tabs_l->l_size++;
 }
 
 void mx_date_time_for_l(t_info *info) {

@@ -58,5 +58,4 @@ static void check_flag_h(t_info *info) {
 		tmp->size = mx_strdup(temp_str);
 		free(temp_str);
 	}
-	// info->tabs_l->l_size += 1; (тут хуйня !!!!)
 }
