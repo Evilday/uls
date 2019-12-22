@@ -20,6 +20,17 @@
 #include <pwd.h>
 #include <grp.h>
 
+#define RED   		"\x1B[31m"
+#define YEL   		"\x1B[33m"
+#define BLU   		"\x1B[34m"
+#define MAG   		"\x1B[35m"
+#define RESET 		"\x1B[0m"
+#define BLK_F_RED_B "\x1B[0;30;41m"
+#define BLK_F_CYAN_B "\x1B[0;30;46m"
+#define BLOCK 		"\x1B[0;34;46m"
+#define CHR 		"\x1B[0;34;43m"
+#define DIR_T 		"\x1B[0;30;42m"
+
 typedef struct s_tabs_l {
 	int l_nlink;
 	int l_login;
@@ -37,6 +48,7 @@ typedef struct s_uni_list {
 
 typedef struct s_info_l {
 	char *access; // доступ до файлів
+	char *access_list; // список доступів до елемента каталогу
 	char *nlink;
 	char *login;
 	char *group_owner;
@@ -172,6 +184,9 @@ void mx_date_time_for_l(t_info *info);
 char *mx_block_size(t_info_l *info_l, struct stat buff);
 void mx_advanced_permissions_check(t_info *info);
 
+// mx_flag_dog
+void mx_take_acl_list(t_info *info);
+
 // mx_flag_R
 void mx_flag_R(t_info *info, char *arg);
 
@@ -181,7 +196,13 @@ void mx_flag_p_or_F(t_info *info, t_uni_list *arg);
 // mx_flag_h
 char *mx_flag_h(char *size);
 
+// mx_flag_G
+void mx_print_color(t_info *info, t_uni_list *arg);
+
 // mx_your_atoi
 long long int my_atoi(const char *str);
+
+// mx_on_off_flags
+void mx_on_off_flags(t_info *info);
 
 #endif

@@ -26,7 +26,7 @@ void mx_arg_files(t_info *info) { // обробка аргумента, що є 
 	if (info->flags_exist)
 		mx_work_with_flags(info);
 	mx_print_arg(info, 0);
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next)
+	while(info->sub_args)
 		mx_pop_uni_list_front(&(info->sub_args));
 }
 
@@ -44,6 +44,7 @@ void mx_arg_folders(t_info *info) { // обробка аргумента, що �
 void mx_work_with_args(t_info *info) {
 	if (info->flags_exist)
 		mx_take_flags(info);
+	mx_on_off_flags(info);
 	mx_sort_args(info);
 	mx_arg_not_exist(info);
 	if (info->file_exist || info->folder_exist) {

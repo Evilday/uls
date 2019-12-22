@@ -13,12 +13,14 @@ void mx_basic_print(t_info *info) {
 		sub_r = 0;
 		for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, j++) {
 			if ((j + num_of_lines - i) % num_of_lines == 0) {
-				mx_printstr(tmp->data);
 				if (info->p_F_flag != '0')
 					mx_flag_p_or_F(info, tmp);
-				if (sub_r + num_of_lines < info->num_of_sub) {
-					basic_tab_print(info, mx_strlen(tmp->data));
-				}
+				else if (info->flag_G)
+					mx_print_color(info, tmp);
+				else
+					mx_printstr(tmp->data);
+				if (sub_r + num_of_lines < info->num_of_sub)
+					basic_tab_print(info, strlen(tmp->data));
 			}
 			++sub_r;
 		}
@@ -28,10 +30,13 @@ void mx_basic_print(t_info *info) {
 
 void mx_print_1(t_info *info) {
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		mx_printstr(tmp->data);
 		if (info->p_F_flag != '0')
 			mx_flag_p_or_F(info, tmp);
-		mx_printchar('\n');
+		else if (info->flag_G)
+			mx_print_color(info, tmp);
+		else
+			mx_printstr(tmp->data);
+		write(1, "\n", 1);
 	}
 }
 
@@ -74,18 +79,25 @@ static void basic_tab_print(t_info *info, int arg_len) {
 
 static void print_name(t_info *info, t_uni_list *arg) {
 	char *buf = mx_strnew(256);
-	char *theOne;
+	char *theOne = mx_strjoin(info->path, arg->data);
 
-	theOne = mx_strjoin(info->path, arg->data);
 	if (readlink(theOne, buf, 256) > 0) {
-		mx_printstr(arg->data);
+		if (info->p_F_flag != '0')
+			mx_flag_p_or_F(info, arg);
+		else if (info->flag_G)
+			mx_print_color(info, arg);
+		else
+			mx_printstr(arg->data);
 		mx_printstr(" -> ");
 		mx_printstr(buf);
 	}
 	else {
-		mx_printstr(arg->data);
 		if (info->p_F_flag != '0')
 			mx_flag_p_or_F(info, arg);
+		else if (info->flag_G)
+			mx_print_color(info, arg);
+		else
+			mx_printstr(arg->data);
 	}
 	free(theOne);
 	free(buf);

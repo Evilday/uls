@@ -5,16 +5,16 @@ static char *get_minor (unsigned int rdev);
 static char *check_minor(unsigned int rdev);
 
 void mx_advanced_permissions_check(t_info *info) {
+	char *arg;
 	acl_t acl;
 	t_info_l *tmp_info_l = info->info_l;
 
 	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next
 		, tmp_info_l = tmp_info_l->next) {
-		char *arg = mx_strjoin(info->path, tmp->data);
-
+		arg = mx_strjoin(info->path, tmp->data);
 		acl = acl_get_file(arg, ACL_TYPE_EXTENDED);
 		if (listxattr(arg, NULL, 0, XATTR_NOFOLLOW) > 0)
-				tmp_info_l->access[10] = '@';
+			tmp_info_l->access[10] = '@';
 		else if (acl) {
 			tmp_info_l->access[10] = '+';
 			acl_free(acl);

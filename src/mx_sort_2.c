@@ -19,7 +19,7 @@ static void sort_with_flag_S(t_info *info) {
 	int first;
 	int second;
 
-	if (info->num_of_sub > 1)
+	if (info->num_of_sub > 1) {
 		while (rec) {
 			rec = 0;
 			elem = 0;
@@ -35,6 +35,16 @@ static void sort_with_flag_S(t_info *info) {
 				elem++;
 			}
 		}
+	}
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
+		mx_printstr(tmp->data);
+		mx_printchar(' ');
+	}
+	mx_printchar('\n');
+	for (t_info_l *tmp2 = info->info_l; tmp2->next; tmp2 = tmp2->next) {
+		mx_printstr(tmp2->size);
+		mx_printchar(' ');
+	}
 }
 
 static void take_size(t_info *info) {

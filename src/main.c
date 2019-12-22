@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-// check what's wrong in S
-// work with files
+// виправити некоректне оформлення виводу в файли
 // flag -G
 // аудитор
+// коли в назві кирилиця, таби рахуються неправильно

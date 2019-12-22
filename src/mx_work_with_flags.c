@@ -1,18 +1,19 @@
 #include "uls.h"
 
 static void take_flags_2(t_info *info, bool *our_flags);
-static void on_off_flags(t_info *info);
 
 void mx_l_flag(t_info *info) {
 	info->total_blocks_l = 0;
 	mx_l_permissions(info);
 	mx_take_group_and_size_for_l(info);
 	mx_date_time_for_l(info);
+	if (info->flag_dog)
+		mx_take_acl_list(info);
 }
 
 void mx_take_flags(t_info *info) {
-	bool *our_flags = (bool *)malloc(19);
-	char all_flags[20] = "laARGh@eT1CrtucSmfp\0";
+	bool *our_flags = (bool *)malloc(20);
+	char all_flags[21] = "laARGh@eT1CrtucSmfpF\0";
 	int i;
 
 	for (i = 0; i < 17; i++)
@@ -36,8 +37,6 @@ void mx_take_flags(t_info *info) {
 			}
 	}
 	take_flags_2(info, our_flags);
-	if (info->flag_f)
-		on_off_flags(info);
 	free(our_flags);
 }
 
@@ -61,21 +60,16 @@ static void take_flags_2(t_info *info, bool *our_flags) {
 		info->flag_A = 1;
 	if (our_flags[3])
 		info->flag_R = 1;
+	if (our_flags[4])
+		info->flag_G = 1;
 	if (our_flags[5])
 		info->flag_h = 1;
+	if (our_flags[6])
+		info->flag_dog = 1;
 	if (our_flags[8])
 		info->flag_T = 1;
 	if (our_flags[11])
 		info->flag_r = 1;
 	if (our_flags[17])
 		info->flag_f = 1;
-}
-
-static void on_off_flags(t_info *info) {
-	if (info->print_flag == 'l')
-		info->print_flag = '0';
-	if (info->sort_flag == 't')
-		info->sort_flag = '0';
-	info->flag_r = 0;
-	info->flag_a = 1;
 }

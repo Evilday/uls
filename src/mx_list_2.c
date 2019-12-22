@@ -10,6 +10,7 @@ t_info_l *mx_create_info_l(char *data) {
 		mx_strcpy(new_info_l->access, data);
 	 	(new_info_l->access)[10] = ' ';
 	 	(new_info_l->access)[11] = ' ';
+	 	new_info_l->access_list = NULL;
 		new_info_l->nlink = NULL;
 		new_info_l->login = NULL;
 		new_info_l->group_owner = NULL;
@@ -45,6 +46,8 @@ void mx_pop_info_l_front(t_info_l **head) {
 		mx_strdel(&(temp->nlink));
 		if (malloc_size(temp->login))
 			mx_strdel(&(temp->login));
+		if (malloc_size(temp->access_list))
+			mx_strdel(&(temp->access_list));
 		mx_strdel(&(temp->group_owner));
 		mx_strdel(&(temp->size));
 		mx_strdel(&(temp->time_upd));
