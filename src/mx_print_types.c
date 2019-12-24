@@ -1,7 +1,7 @@
 #include "uls.h"
 
 static void basic_tab_print(t_info *info, int arg_len);
-static void print_name(t_info *info, t_uni_list *arg);
+static void print_name(t_info *info, t_uni_list *arg, t_info_l *info_l);
 
 void mx_basic_print(t_info *info) {
 	int j;
@@ -49,8 +49,10 @@ void mx_print_l(t_info *info) {
 		mx_print_tabs(tmp3->l_nlink - mx_strlen(tmp->nlink));
 		mx_printstr(tmp->nlink);
 		mx_print_tabs(1);
-		mx_printstr(tmp->login);
-		mx_print_tabs(tmp3->l_login - mx_strlen(tmp->login) + 2);
+		if (!info->flag_g) {
+			mx_printstr(tmp->login);
+			mx_print_tabs(tmp3->l_login - mx_strlen(tmp->login) + 2);
+		}
 		mx_printstr(tmp->group_owner);
 		mx_print_tabs(tmp3->l_group_owner - mx_strlen(tmp->group_owner));
 		mx_print_tabs(!tmp->minor_major ? tmp3->l_size
@@ -59,7 +61,7 @@ void mx_print_l(t_info *info) {
 		mx_print_tabs(1);
 		mx_printstr(tmp->time_upd);
 		mx_print_tabs(tmp3->l_time_upd - mx_strlen(tmp->time_upd) + 1);
-		print_name(info, t2);
+		print_name(info, t2, tmp);
 	}
 }
 
@@ -77,7 +79,7 @@ static void basic_tab_print(t_info *info, int arg_len) {
 	}
 }
 
-static void print_name(t_info *info, t_uni_list *arg) {
+static void print_name(t_info *info, t_uni_list *arg, t_info_l *info_l) {
 	char *buf = mx_strnew(256);
 	char *theOne = mx_strjoin(info->path, arg->data);
 
@@ -101,5 +103,7 @@ static void print_name(t_info *info, t_uni_list *arg) {
 	}
 	free(theOne);
 	free(buf);
+	if (info->flag_dog)
+		mx_take_xattr_list(info, arg->data, info_l);
 	mx_printchar('\n');
 }

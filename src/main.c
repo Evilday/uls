@@ -1,7 +1,8 @@
 #include "uls.h"
 
 int main(int argc, char *argv[]) {
-	t_info *info = mx_info_start(argc - 1, &(argv[1])); // sending without file_name
+	// sending without file_name
+	t_info *info = mx_info_start(argc - 1, &(argv[1]));
 
 	mx_start(info);
 	// system("leaks uls");
@@ -12,3 +13,5 @@ int main(int argc, char *argv[]) {
 // flag -G
 // аудитор
 // коли в назві кирилиця, таби рахуються неправильно
+// flag_dog не працює з лінками
+// чекнути ліки

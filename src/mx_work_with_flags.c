@@ -7,23 +7,27 @@ void mx_l_flag(t_info *info) {
 	mx_l_permissions(info);
 	mx_take_group_and_size_for_l(info);
 	mx_date_time_for_l(info);
-	if (info->flag_dog)
-		mx_take_acl_list(info);
 }
 
 void mx_take_flags(t_info *info) {
-	bool *our_flags = (bool *)malloc(20);
-	char all_flags[21] = "laARGh@eT1CrtucSmfpF\0";
+	bool *our_flags = (bool *)malloc(22);
+	char all_flags[23] = "laARGh@eT1CrtucSmfpFgn\0";
 	int i;
 
-	for (i = 0; i < 17; i++)
+	for (i = 0; i < 22; i++)
 		our_flags[i] = 0;
 	for (i = 0; i < info->argc; i++) {
 		if (info->where_what[i] == 1)
 			for (int j = 1; info->argv[i][j]; j++) {
 				if (info->argv[i][j] == 'l' || info->argv[i][j] == '1' 
-						|| info->argv[i][j] == 'C' || info->argv[i][j] == 'm')
+						|| info->argv[i][j] == 'C' || info->argv[i][j] == 'm' 
+						|| info->argv[i][j] == 'g' || info->argv[i][j] == 'n') {
+					if (info->argv[i][j] == 'g')
+						info->flag_g = 1;
+					else if (info->argv[i][j] == 'n')
+						info->flag_n = 1;
 					info->print_flag = info->argv[i][j];
+				}
 				else if (info->argv[i][j] == 't' || info->argv[i][j] == 'S')
 					info->sort_flag = info->argv[i][j];
 				else if (info->argv[i][j] == 'u' || info->argv[i][j] == 'c')
@@ -41,12 +45,12 @@ void mx_take_flags(t_info *info) {
 }
 
 void mx_work_with_flags(t_info *info) {
-	if (info->print_flag == 'l') {
+	if (info->flag_g)
+		info->flag_n = 0;
+	if (info->print_flag == 'g' || info->print_flag == 'n')
+		info->print_flag = 'l';
+	if (info->print_flag == 'l')
 		mx_l_flag(info);
-	}
-	else if (info->print_flag == '1') {
-		//
-	}
 	if (info->sort_flag != '0')
 		mx_sort_with_flags(info);
 	if (info->flag_r)

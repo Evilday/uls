@@ -1,7 +1,7 @@
 #ifndef ULS_H
 #define ULS_H
 
-#define INVALID_USAGE "usage: uls [-l] [file ...]"
+#define INVALID_USAGE "usage: uls [-laARGh@eT1CrtucSmfpFgn] [file ...]"
 
 #include "libmx/inc/libmx.h"
 
@@ -96,6 +96,8 @@ typedef struct s_info {
 	bool flag_r;
 	bool flag_t;
 	bool flag_f;
+	bool flag_g;
+	bool flag_n;
 } t_info;
 
 // mx_check_errors
@@ -185,7 +187,7 @@ char *mx_block_size(t_info_l *info_l, struct stat buff);
 void mx_advanced_permissions_check(t_info *info);
 
 // mx_flag_dog
-void mx_take_acl_list(t_info *info);
+void mx_take_xattr_list(t_info *info, char *arg, t_info_l *info_l);
 
 // mx_flag_R
 void mx_flag_R(t_info *info, char *arg);

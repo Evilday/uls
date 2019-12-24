@@ -15,10 +15,10 @@ void mx_advanced_permissions_check(t_info *info) {
 		acl = acl_get_file(arg, ACL_TYPE_EXTENDED);
 		if (listxattr(arg, NULL, 0, XATTR_NOFOLLOW) > 0)
 			tmp_info_l->access[10] = '@';
-		else if (acl) {
+		else if (acl)
 			tmp_info_l->access[10] = '+';
+		if (acl)
 			acl_free(acl);
-		}
 		free(arg);
 	}
 }

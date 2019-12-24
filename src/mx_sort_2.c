@@ -16,17 +16,13 @@ void mx_flag_S(t_info *info) {
 static void sort_with_flag_S(t_info *info) {
 	int elem = 0;
 	int rec = 1;
-	int first;
-	int second;
 
 	if (info->num_of_sub > 1) {
 		while (rec) {
 			rec = 0;
 			elem = 0;
 			for (t_info_l *tmp2 = info->info_l; tmp2->next; tmp2 = tmp2->next) {
-				first = mx_atoi(tmp2->size);
-				second = mx_atoi(tmp2->next->size);
-				if (first < second) {
+				if (mx_atoi(tmp2->size) < mx_atoi(tmp2->next->size)) {
 					mx_swap_uni_list(info, elem, elem + 1);
 					mx_swap_l(info, elem, elem + 1);
 					rec = 1;

@@ -1,5 +1,6 @@
 #include "uls.h"
 
+static bool check_argv_2(t_info *info, DIR *f, struct dirent *d, int i);
 static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d);
 
 char *mx_up_to_one(char *str) {
@@ -17,7 +18,6 @@ char *mx_up_to_one(char *str) {
 bool mx_check_argv(t_info *info, int i) {
 	DIR *f = NULL;
 	struct dirent *d = NULL;
-	char *file;
 
 	if ((f = opendir(info->argv[i]))) { // намагаємося вікрити аргумент
 		closedir(f);
@@ -26,27 +26,15 @@ bool mx_check_argv(t_info *info, int i) {
 		return 1;
 	}
 	else {
-		file = mx_up_to_one(info->argv[i]); // обрізаємо уточнення, що це файл
-		f = opendir(file);
-		if (f)
-			while ((d = readdir(f)))
-				if (!mx_strcmp(d->d_name, info->argv[i] + (mx_strlen(file) + 1))) {
-					if (d->d_type != 4)
-						if (else_check_argv(info->argv[i], file, f, d)) {
-							free(file);
-							info->file_exist = 1;
-							info->where_what[i] = 2;
-							return 1;
-						}
-					free(file);
-					break;
-				}
+		bool res = check_argv_2(info, f, d, i);
+
+		return res;
 	}
 	return 0;
 }
 
 bool mx_check_flags(t_info *info, int i) {
-	char all_flags[21] = "laARGh@eT1CrtucSmfpF\0";
+	char all_flags[23] = "laARGh@eT1CrtucSmfpFgn\0";
 
 	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
@@ -68,8 +56,29 @@ bool mx_check_flags(t_info *info, int i) {
 	return 0;
 }
 
+static bool check_argv_2(t_info *info, DIR *f, struct dirent *d, int i) {
+	char *file;
+
+	file = mx_up_to_one(info->argv[i]); // обрізаємо уточнення, що це файл
+	f = opendir(file);
+	if (f)
+		while ((d = readdir(f)))
+			if (!mx_strcmp(d->d_name, info->argv[i] + (mx_strlen(file) + 1))) {
+				if (d->d_type != 4)
+					if (else_check_argv(info->argv[i], file, f, d)) {
+						free(file);
+						info->file_exist = 1;
+						info->where_what[i] = 2;
+						return 1;
+					}
+				free(file);
+				break;
+			}
+	return 0;
+}
+
 static bool else_check_argv(char *arg, char *file, DIR *f, struct dirent *d) {
-	if ((f = opendir(file))) { // намагаємося відкрити без уточнення, що це файл
+	if ((f = opendir(file))) { // відкриваємо без уточнення, що це файл
 		while((d = readdir(f))) {
 			if (!mx_strcmp(d->d_name, arg + mx_strlen(file) + 1)) {
 				closedir(f);

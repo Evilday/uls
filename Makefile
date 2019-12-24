@@ -20,7 +20,7 @@ OBJO = ./obj/*.o
 	#./obj/main.o \
 	#./obj/mx_check_errors_2.o
 
-CFLGS = -std=c11 -Wall -Werror -Wextra -Wpedantic -g -fsanitize=address
+CFLGS = -std=c11 -Wall -Werror -Wextra -Wpedantic# -g -fsanitize=address
 
 all: install uninstall
 

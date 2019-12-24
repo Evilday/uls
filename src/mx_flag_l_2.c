@@ -1,6 +1,6 @@
 #include "uls.h"
 
-static char *get_login(uid_t st_uid);
+static char *get_login(uid_t st_uid, bool flag_n);
 static char *time_format(t_info *info, struct stat buff);
 
 void mx_take_group_and_size_for_l(t_info *info) {
@@ -20,7 +20,7 @@ void mx_take_group_and_size_for_l(t_info *info) {
 			tmp->group_owner = mx_strdup(grp->gr_name);
 		else
 			tmp->group_owner = mx_itoa(buff.st_gid);
-		tmp->login = get_login(buff.st_uid);
+		tmp->login = get_login(buff.st_uid, info->flag_n);
 		tmp->size = mx_block_size(tmp, buff);
 		tmp2 = tmp2->next;
 	}
@@ -89,13 +89,17 @@ static char *time_format(t_info *info, struct stat buff) {
 	return time_result;
 }
 
-static char *get_login(uid_t st_uid) {
+static char *get_login(uid_t st_uid, bool flag_n) {
 	char *user = (char *)malloc(256);
 	struct passwd *pw = getpwuid(st_uid);
 
 	if (pw == NULL)
 		user = mx_itoa(st_uid);
-	else
-		mx_strcpy(user, pw->pw_name);
+	else {
+		if (flag_n)
+			mx_strcpy(user, mx_itoa(pw->pw_uid));
+		else
+			mx_strcpy(user, pw->pw_name);
+	}
 	return user;
 }
