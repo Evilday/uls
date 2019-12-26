@@ -23,7 +23,7 @@ void mx_arg_not_exist(t_info *info) {
 			errors = 1;
 		}
 	if (errors && !info->file_exist && !info->folder_exist)
-		exit(0);
+		exit(1);
 }
 
 void mx_is_allowed(char *path) {

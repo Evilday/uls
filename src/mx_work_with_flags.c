@@ -48,7 +48,8 @@ static void take_flags_2(t_info *info, int i, int j, bool *our_flags) {
 		|| info->argv[i][j] == 'g' || info->argv[i][j] == 'n') {
 		info->argv[i][j] == 'g' ? info->flag_g = 1
 		: info->argv[i][j] == 'n' ? info->flag_n = 1 : 0;
-		info->print_flag = info->argv[i][j];
+		info->print_flag = info->print_flag == 'm' && info->argv[i][j] == 'C'
+		? info->print_flag : info->argv[i][j];
 	}
 	else if (info->argv[i][j] == 't' || info->argv[i][j] == 'S')
 		info->sort_flag = info->argv[i][j];

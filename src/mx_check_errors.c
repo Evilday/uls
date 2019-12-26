@@ -31,7 +31,7 @@ bool mx_check_argv(t_info *info, int i) {
 }
 
 bool mx_check_flags(t_info *info, int i) {
-	char all_flags[24] = "laARGh@eT1CrtucSmfpFgnd\0";
+	char all_flags[23] = "laARGh@T1CrtucSmfpFgnd\0";
 
 	if (info->argv[i][0] == '-' && info->argv[i][1]) {
 		if (info->argv[i][1] == '-' && !info->argv[i][2]) {
@@ -42,7 +42,7 @@ bool mx_check_flags(t_info *info, int i) {
 		for (int j = 1; info->argv[i][j]; j++) {
 			if (!mx_strchr(all_flags, info->argv[i][j])) {
 				mx_invalid_usage(info->argv[i][j]);
-				exit(0);
+				exit(1);
 			}
 		}
 		info->where_what[i] = 1;

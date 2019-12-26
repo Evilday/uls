@@ -1,7 +1,7 @@
 #ifndef ULS_H
 #define ULS_H
 
-#define INVALID_USAGE "usage: uls [-laARGh@eT1CrtucSmfpFgnd] [file ...]"
+#define INVALID_USAGE "usage: uls [-@ACFGRSTacdfghlmnprtu1] [file ...]"
 
 #include "libmx/inc/libmx.h"
 
