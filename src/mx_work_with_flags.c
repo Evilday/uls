@@ -1,6 +1,7 @@
 #include "uls.h"
 
-static void take_flags_2(t_info *info, bool *our_flags);
+static void activate_all_flags(t_info *info, bool *our_flags);
+static void take_flags_2(t_info *info, int i, int j, bool *our_flags);
 
 void mx_l_flag(t_info *info) {
 	info->total_blocks_l = 0;
@@ -10,43 +11,22 @@ void mx_l_flag(t_info *info) {
 }
 
 void mx_take_flags(t_info *info) {
-	bool *our_flags = (bool *)malloc(22);
-	char all_flags[23] = "laARGh@eT1CrtucSmfpFgn\0";
+	bool *our_flags = (bool *)malloc(23);
 	int i;
 
-	for (i = 0; i < 22; i++)
+	for (i = 0; i < 23; i++)
 		our_flags[i] = 0;
 	for (i = 0; i < info->argc; i++) {
 		if (info->where_what[i] == 1)
 			for (int j = 1; info->argv[i][j]; j++) {
-				if (info->argv[i][j] == 'l' || info->argv[i][j] == '1' 
-						|| info->argv[i][j] == 'C' || info->argv[i][j] == 'm' 
-						|| info->argv[i][j] == 'g' || info->argv[i][j] == 'n') {
-					if (info->argv[i][j] == 'g')
-						info->flag_g = 1;
-					else if (info->argv[i][j] == 'n')
-						info->flag_n = 1;
-					info->print_flag = info->argv[i][j];
-				}
-				else if (info->argv[i][j] == 't' || info->argv[i][j] == 'S')
-					info->sort_flag = info->argv[i][j];
-				else if (info->argv[i][j] == 'u' || info->argv[i][j] == 'c')
-					info->time_flag = info->argv[i][j];
-				else if (info->argv[i][j] == 'p' || info->argv[i][j] == 'F')
-					info->p_F_flag = info->argv[i][j];
-				else
-					for (int p = 0; all_flags[p]; p++)
-						if (all_flags[p] == info->argv[i][j])
-							our_flags[p] = 1;
+				take_flags_2(info, i, j, our_flags);
 			}
 	}
-	take_flags_2(info, our_flags);
+	activate_all_flags(info, our_flags);
 	free(our_flags);
 }
 
 void mx_work_with_flags(t_info *info) {
-	if (info->flag_g)
-		info->flag_n = 0;
 	if (info->print_flag == 'g' || info->print_flag == 'n')
 		info->print_flag = 'l';
 	if (info->print_flag == 'l')
@@ -57,7 +37,29 @@ void mx_work_with_flags(t_info *info) {
 		mx_rotate(info);
 }
 
-static void take_flags_2(t_info *info, bool *our_flags) {
+static void take_flags_2(t_info *info, int i, int j, bool *our_flags) {
+	char all_flags[24] = "laARGh@eT1CrtucSmfpFgnd\0";
+
+	if (info->argv[i][j] == 'l' || info->argv[i][j] == '1' 
+		|| info->argv[i][j] == 'C' || info->argv[i][j] == 'm' 
+		|| info->argv[i][j] == 'g' || info->argv[i][j] == 'n') {
+		info->argv[i][j] == 'g' ? info->flag_g = 1
+		: info->argv[i][j] == 'n' ? info->flag_n = 1 : 0;
+		info->print_flag = info->argv[i][j];
+	}
+	else if (info->argv[i][j] == 't' || info->argv[i][j] == 'S')
+		info->sort_flag = info->argv[i][j];
+	else if (info->argv[i][j] == 'u' || info->argv[i][j] == 'c')
+		info->time_flag = info->argv[i][j];
+	else if (info->argv[i][j] == 'p' || info->argv[i][j] == 'F')
+		info->p_F_flag = info->argv[i][j];
+	else
+		for (int p = 0; all_flags[p]; p++)
+			if (all_flags[p] == info->argv[i][j])
+				our_flags[p] = 1;
+}
+
+static void activate_all_flags(t_info *info, bool *our_flags) {
 	if (our_flags[1])
 		info->flag_a = 1;
 	if (our_flags[2])
@@ -76,4 +78,6 @@ static void take_flags_2(t_info *info, bool *our_flags) {
 		info->flag_r = 1;
 	if (our_flags[17])
 		info->flag_f = 1;
+	if (our_flags[22])
+		info->flag_d = 1;
 }

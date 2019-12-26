@@ -41,20 +41,18 @@ static char *get_size(char *new_size, char *size, char *dimension, int pos) {
 		pos++;
 		buffer /= 1024;
 	}
-	fract_num = get_fract_size(fract_num); // получаем дробное число
-	new_size = get_valid_full_num(new_size, fract_num);// получаем целое число
+	fract_num = get_fract_size(fract_num);
+	new_size = get_valid_full_num(new_size, fract_num);
 	new_size = check_disk_sizes(new_size, dimension, pos);
 	free(fract_num);
 	return new_size;
 }
 
-// получение валидной десятичной части числа
 static char *get_fract_size(char *fract_num) {
 	char *temp;
 
 	while (mx_strlen(fract_num) < 4){
 		temp = fract_num;
-
 		fract_num = "0";
 		fract_num = mx_strjoin(fract_num, temp);
 		free(temp);
@@ -70,13 +68,6 @@ static char *get_fract_size(char *fract_num) {
 		}
 	return fract_num;
 }
-
-/*
-** еcли число меньше 10, то есть десятичная часть, мы округляем число, если она больше 5
-** если она больше 5, то есть fract_num[0] = 1. Если же число меньше 9 и не нужно округлять
-** мы дописываем дробную часть. Если число больше 10 и дробная часть больше 1024/2,
-** то мы округляем на 1 целое число
-*/
 
 static char *get_valid_full_num(char *new_size, char* fract_num) {
 	char *temp = new_size;
@@ -110,11 +101,3 @@ static char *check_disk_sizes(char *new_size, char *dimension, int pos) {
 	free(new_size);
 	return temp;
 }
-
-/*
-** Килобайт	КБ	1,024					1024 Б
-** Мегабайт	МБ	1,048,576				1024 КБ
-** Гигабайт	ГБ	1,073,741,824			1024 МБ
-** Терабайт	ТБ	1,099,511,627,776		1024 ГБ
-** Петабайт	ПБ	1,125,899,906,842,624	1024 ТБ
-*/

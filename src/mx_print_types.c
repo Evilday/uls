@@ -13,12 +13,7 @@ void mx_basic_print(t_info *info) {
 		sub_r = 0;
 		for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next, j++) {
 			if ((j + num_of_lines - i) % num_of_lines == 0) {
-				if (info->p_F_flag != '0')
-					mx_flag_p_or_F(info, tmp);
-				else if (info->flag_G)
-					mx_print_color(info, tmp);
-				else
-					mx_printstr(tmp->data);
+				mx_choose_print_action(info, tmp);
 				if (sub_r + num_of_lines < info->num_of_sub)
 					basic_tab_print(info, strlen(tmp->data));
 			}
@@ -53,14 +48,7 @@ void mx_print_l(t_info *info) {
 			mx_printstr(tmp->login);
 			mx_print_tabs(tmp3->l_login - mx_strlen(tmp->login) + 2);
 		}
-		mx_printstr(tmp->group_owner);
-		mx_print_tabs(tmp3->l_group_owner - mx_strlen(tmp->group_owner));
-		mx_print_tabs(!tmp->minor_major ? tmp3->l_size
-			- mx_strlen(tmp->size) + 2 : 2);
-		mx_printstr(tmp->size);
-		mx_print_tabs(1);
-		mx_printstr(tmp->time_upd);
-		mx_print_tabs(tmp3->l_time_upd - mx_strlen(tmp->time_upd) + 1);
+		mx_print_l_2(tmp, tmp3);
 		print_name(info, t2, tmp);
 	}
 }
@@ -93,14 +81,8 @@ static void print_name(t_info *info, t_uni_list *arg, t_info_l *info_l) {
 		mx_printstr(" -> ");
 		mx_printstr(buf);
 	}
-	else {
-		if (info->p_F_flag != '0')
-			mx_flag_p_or_F(info, arg);
-		else if (info->flag_G)
-			mx_print_color(info, arg);
-		else
-			mx_printstr(arg->data);
-	}
+	else
+		mx_choose_print_action(info, arg);
 	free(theOne);
 	free(buf);
 	if (info->flag_dog)

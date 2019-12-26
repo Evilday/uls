@@ -46,7 +46,7 @@ static unsigned long *save_time(t_info *info) {
 		else if (info->time_flag == 'c')
 			time_all[i] = time(0) - time_struct.st_ctime;
 		else
-			time_all[i] = time(0) - time_struct.st_ctime;
+			time_all[i] = time(0) - time_struct.st_mtime;
 		free(arg);
 	}
 	return time_all;

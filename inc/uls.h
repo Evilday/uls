@@ -1,7 +1,7 @@
 #ifndef ULS_H
 #define ULS_H
 
-#define INVALID_USAGE "usage: uls [-laARGh@eT1CrtucSmfpFgn] [file ...]"
+#define INVALID_USAGE "usage: uls [-laARGh@eT1CrtucSmfpFgnd] [file ...]"
 
 #include "libmx/inc/libmx.h"
 
@@ -20,6 +20,7 @@
 #include <pwd.h>
 #include <grp.h>
 
+#define GRN			"\x1B[32m"
 #define RED   		"\x1B[31m"
 #define YEL   		"\x1B[33m"
 #define BLU   		"\x1B[34m"
@@ -30,6 +31,7 @@
 #define BLOCK 		"\x1B[0;34;46m"
 #define CHR 		"\x1B[0;34;43m"
 #define DIR_T 		"\x1B[0;30;42m"
+#define DIR_X		"\x1B[0;30;43m"
 
 typedef struct s_tabs_l {
 	int l_nlink;
@@ -47,8 +49,8 @@ typedef struct s_uni_list {
 } t_uni_list;
 
 typedef struct s_info_l {
-	char *access; // доступ до файлів
-	char *access_list; // список доступів до елемента каталогу
+	char *access;
+	char *access_list;
 	char *nlink;
 	char *login;
 	char *group_owner;
@@ -61,35 +63,35 @@ typedef struct s_info_l {
 typedef struct s_info {
 	int argc;
 	char **argv;
-	int num_of_arg; // кількість аргументів для виводу
-	bool first_argv; // щоб перевірити, чи ми виводимо перший аргумент
+	int num_of_arg;
+	bool first_argv;
 
-	bool flags_exist; // чи є якісь флаги серез аргументів,  що поступили
-	bool file_exist; // чи є файл серез аргументів, що поступили
-	bool folder_exist; // чи є папка серез аргументів, що поступили
+	bool flags_exist;
+	bool file_exist;
+	bool folder_exist;
 
-	int *where_what; // 0 - не валідна, 1 - флажок, 2 - файл, 3 - папка, 4 - ігнор
+	int *where_what;
 
-	struct s_uni_list *sub_args; // назви файлів, які є в аргументі
-	char *path; // шлях для sub_args
+	struct s_uni_list *sub_args;
+	char *path;
 
-	int num_of_sub; // кількість елементів в агрументі
-	int max_sub_len; // найдовше слово серед елементів аргумента
+	int num_of_sub;
+	int max_sub_len;
 
-	struct s_info_l *info_l; // всі данні для роботи з l флагом
-	struct s_tabs_l *tabs_l; // кількість пробілів для кожного елементу флага l при виводі
+	struct s_info_l *info_l;
+	struct s_tabs_l *tabs_l;
 	int total_blocks_l;
 
-	char print_flag; // type for print (l, 1, S)
-	char sort_flag; // type for print (l, 1, S)
-	char time_flag; // time type for l (u, 0, c)
-	char p_F_flag; // time type for l (u, 0, c)
+	char print_flag;
+	char sort_flag;
+	char time_flag;
+	char p_F_flag;
 	bool flag_a;
 	bool flag_A;
 	bool flag_R;
 	bool flag_G;
 	bool flag_h;
-	bool flag_dog; // flag @
+	bool flag_dog;
 	bool flag_e;
 	bool flag_T;
 	bool flag_C;
@@ -98,6 +100,7 @@ typedef struct s_info {
 	bool flag_f;
 	bool flag_g;
 	bool flag_n;
+	bool flag_d;
 } t_info;
 
 // mx_check_errors
@@ -116,7 +119,7 @@ void mx_print_tabs(int n);
 void mx_print_arg(t_info *info, bool folder);
 
 // mx_print_errors
-void mx_invalid_usage();
+void mx_invalid_usage(char sym);
 void mx_arg_not_exist(t_info *info);
 void mx_is_allowed(char *path);
 
@@ -128,15 +131,20 @@ void mx_print_l(t_info *info);
 // mx_print_types_2
 void mx_print_semicoma(t_info *info);
 
+// mx_print_types_3
+void mx_choose_print_action(t_info *info, t_uni_list *tmp);
+void mx_print_l_2(t_info_l *tmp, t_tabs_l *tmp3);
+
 // mx_clear_all
 void mx_clear_all(t_info *info);
 
 // mx_work_with_args
 void mx_work_with_args(t_info *info);
 void mx_work_with_one_arg(t_info *info, char *arg, bool folder);
+void mx_default_args(t_info *info);
 
 // mx_work_with_args_2
-bool mx_look_sub_argv(t_info *info, char *arg, t_uni_list *where_to_save);
+bool mx_look_sub_argv(t_info *info, char *arg, t_uni_list *save);
 
 // mx_work_with_flags
 void mx_work_with_flags(t_info *info);
@@ -169,7 +177,7 @@ void mx_pop_info_l_front(t_info_l **head);
 void mx_swap_l(t_info *info, int x, int y);
 
 // mx_flags_a_A
-void mx_look_sub_argv_2(t_info *info, DIR *f, t_uni_list *where_to_save);
+void mx_look_sub_argv_2(t_info *info, DIR *f, t_uni_list *save);
 
 // mx_flag_l
 void mx_l_permissions(t_info *info);
@@ -186,6 +194,9 @@ void mx_date_time_for_l(t_info *info);
 char *mx_block_size(t_info_l *info_l, struct stat buff);
 void mx_advanced_permissions_check(t_info *info);
 
+// mx_flag_l_4
+char *mx_time_format(t_info *info, struct stat buff);
+
 // mx_flag_dog
 void mx_take_xattr_list(t_info *info, char *arg, t_info_l *info_l);
 
@@ -200,6 +211,9 @@ char *mx_flag_h(char *size);
 
 // mx_flag_G
 void mx_print_color(t_info *info, t_uni_list *arg);
+
+// mx_flag_d
+void mx_flag_d(t_info *info);
 
 // mx_your_atoi
 long long int my_atoi(const char *str);

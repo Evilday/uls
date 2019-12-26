@@ -49,18 +49,17 @@ static void swap_links(t_uni_list *currX, t_uni_list *currY) {
 }
 
 void mx_swap_uni_list(t_info *info, int x, int y) {
-	int pos = 0;
 	t_uni_list *prevX = NULL;
 	t_uni_list *currX = info->sub_args;
 	t_uni_list *prevY = NULL;
 	t_uni_list *currY = info->sub_args;
+	int pos = 0;
 
-	while (currX && pos++ != x) {
+	for (pos = 0; currX && pos != x; pos++) {
 		prevX = currX;
 		currX = currX->next;
 	}
-	pos = 0;
-	while (currY && pos++ != y) { 
+	for (pos = 0; currY && pos != y; pos++) {
 		prevY = currY; 
 		currY = currY->next; 
 	}

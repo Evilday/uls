@@ -21,8 +21,8 @@ static void sort_with_flag_S(t_info *info) {
 		while (rec) {
 			rec = 0;
 			elem = 0;
-			for (t_info_l *tmp2 = info->info_l; tmp2->next; tmp2 = tmp2->next) {
-				if (mx_atoi(tmp2->size) < mx_atoi(tmp2->next->size)) {
+			for (t_info_l *t2 = info->info_l; t2->next; t2 = t2->next) {
+				if (mx_atoi(t2->size) < mx_atoi(t2->next->size)) {
 					mx_swap_uni_list(info, elem, elem + 1);
 					mx_swap_l(info, elem, elem + 1);
 					rec = 1;
@@ -31,15 +31,6 @@ static void sort_with_flag_S(t_info *info) {
 				elem++;
 			}
 		}
-	}
-	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next) {
-		mx_printstr(tmp->data);
-		mx_printchar(' ');
-	}
-	mx_printchar('\n');
-	for (t_info_l *tmp2 = info->info_l; tmp2->next; tmp2 = tmp2->next) {
-		mx_printstr(tmp2->size);
-		mx_printchar(' ');
 	}
 }
 

@@ -17,14 +17,3 @@ int mx_num_of_cols(t_info *info) {
 	info->max_sub_len = max_len;
 	return lines;
 }
-
-/*
-табуляция ширина нашего окна делится (5) 8 
-и остачу прибавить к файлу максимальной длины,
- если остаток 0, то прибавить 8 
-*/
-
-
-/*
-(getgrgid(s_info_l->nickname)->gr_name)
-*/

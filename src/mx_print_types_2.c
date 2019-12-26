@@ -15,12 +15,7 @@ void mx_print_semicoma(t_info *info) {
 			words_len += 2;
 		if (words_len >= w.ws_col && (words_len -= temp))
 			write(1, "\n", 1);
-		if (info->p_F_flag != '0')
-			mx_flag_p_or_F(info, tmp);
-		else if (info->flag_G)
-			mx_print_color(info, tmp);
-		else
-			mx_printstr(tmp->data);
+		mx_choose_print_action(info, tmp);
 		if (tmp->next)
 			write(1, ", ", 2);
 	}

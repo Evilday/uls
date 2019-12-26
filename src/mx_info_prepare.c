@@ -1,5 +1,7 @@
 #include "uls.h"
 
+static void info_start_2(t_info *info);
+
 t_info *mx_info_start(int argc, char **argv) {
 	t_info *info = (t_info *)malloc(sizeof(t_info));
 
@@ -16,6 +18,13 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->info_l = NULL;
 	info->tabs_l = NULL;
 	info->num_of_sub = 0;
+	info_start_2(info);
+	for (int i = 0; i < argc; i++)
+		info->where_what[i] = 0;
+	return info;
+}
+
+static void info_start_2(t_info *info) {
 	info->max_sub_len = 0;
 	info->total_blocks_l = 0;
 	info->print_flag = '0';
@@ -35,7 +44,5 @@ t_info *mx_info_start(int argc, char **argv) {
 	info->flag_f = 0;
 	info->flag_g = 0;
 	info->flag_n = 0;
-	for (int i = 0; i < argc; i++)
-		info->where_what[i] = 0;
-	return info;
+	info->flag_d = 0;
 }

@@ -57,18 +57,17 @@ void mx_pop_info_l_front(t_info_l **head) {
 }
 
 void mx_swap_l(t_info *info, int x, int y) {
-	int pos = 0;
 	t_info_l *prevX = NULL;
 	t_info_l *currX = info->info_l;
 	t_info_l *prevY = NULL;
 	t_info_l *currY = info->info_l;
+	int pos = 0;
 
-	while (currX && pos++ != x) {
+	for (pos = 0; currX && pos != x; pos++) {
 		prevX = currX;
 		currX = currX->next;
 	}
-	pos = 0;
-	while (currY && pos++ != y) { 
+	for (pos = 0; currY && pos != y; pos++) {
 		prevY = currY; 
 		currY = currY->next; 
 	}

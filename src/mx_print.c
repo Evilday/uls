@@ -3,18 +3,22 @@
 static void folder_print(t_info *info);
 static void check_flag_h(t_info *info);
 
-void mx_print_tabs(int n) {
-	for (int i = 0; i < n; i++)
-		write(1, " ", 1);
-}
-
-void mx_print_arg(t_info *info, bool folder) {
+static void folder_actions(t_info *info, bool folder) {
 	if (folder)
 		folder_print(info);
 	else
 		info->first_argv = 0;
 	if (info->flag_h)
 		check_flag_h(info);
+}
+
+void mx_print_tabs(int n) {
+	for (int i = 0; i < n; i++)
+		write(1, " ", 1);
+}
+
+void mx_print_arg(t_info *info, bool folder) {
+	folder_actions(info, folder);
 	if (info->sub_args) {
 		if (info->print_flag == '0' || info->print_flag == 'C')
 			mx_basic_print(info);

@@ -17,4 +17,6 @@ void mx_on_off_flags(t_info *info) {
 		if (info->flag_G)
 			info->flag_G = 0;
 	}
+	if (info->flag_d)
+		info->flag_a = 1;
 }

@@ -1,8 +1,6 @@
 #include "uls.h"
 
 static void basic_l_permissions(t_info *info, struct stat perm);
-char mx_get_char(int mode, int is_exec, int is_id);
-char mx_get_mode(int mode, int user_type);
 
 void mx_l_permissions(t_info *info) {
 	struct stat buff;
@@ -36,39 +34,39 @@ char mx_get_type(struct stat file_stat) {
 }
 
 char mx_get_char(int mode, int is_exec, int is_id) {
-    if (mode & is_exec) {
-        if (mode & is_id)
-            return 's';
-        else
-            return 'x';
-    }
-    else {
-        if (mode & is_id)
-            return 'S';
-        else
-            return '-';
-    }
+	if (mode & is_exec) {
+		if (mode & is_id)
+			return 's';
+		else
+			return 'x';
+	}
+	else {
+		if (mode & is_id)
+			return 'S';
+		else
+			return '-';
+	}
 }
 
 char mx_get_mode(int mode, int user_type) {
-    if (user_type == 1)
-        return mx_get_char(mode, S_IXUSR, S_ISUID);
-    else if (user_type == 2)
-        return mx_get_char(mode, S_IXGRP, S_ISGID);
-    else {
-        if (mode & S_IXOTH) {
-            if (mode & S_ISTXT)
-                return 't';
-            else
-                return 'x';
-        }
-        else {
-            if (mode & S_ISTXT)
-                return 'T';
-            else 
-                return '-';
-        }
-    }
+	if (user_type == 1)
+		return mx_get_char(mode, S_IXUSR, S_ISUID);
+	else if (user_type == 2)
+		return mx_get_char(mode, S_IXGRP, S_ISGID);
+	else {
+		if (mode & S_IXOTH) {
+			if (mode & S_ISTXT)
+				return 't';
+			else
+				return 'x';
+		}
+		else {
+			if (mode & S_ISTXT)
+				return 'T';
+			else 
+				return '-';
+		}
+	}
 }
 
 static void basic_l_permissions(t_info *info, struct stat perm) {

@@ -24,11 +24,11 @@ static void flag_R_check_folder(t_info *info, char *arg, t_uni_list *check) {
 	char *adventure = NULL;
 
 	for (t_uni_list *tmp = check; tmp; tmp = tmp->next)
-		if (tmp->folder && mx_strcmp(tmp->data, ".") 
+		if (tmp->folder && mx_strcmp(tmp->data, ".")
 			&& mx_strcmp(tmp->data, "..")) {
 			DIR *f;
-			adventure = mx_strjoin(path, tmp->data);
 
+			adventure = mx_strjoin(path, tmp->data);
 			if ((f = opendir(adventure))) {
 				closedir(f);
 				mx_flag_R(info, adventure);

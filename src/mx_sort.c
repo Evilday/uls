@@ -9,8 +9,8 @@ void mx_sort_args(t_info *info) {
 		char *temp_str;
 		int temp_id;
 
-		for (int i = 0; info->argv[i]; i++) {
-			for (int j = 0; info->argv[j + 1 + i]; j++) {
+		for (int i = 0; info->argv[i]; i++)
+			for (int j = 0; info->argv[j + 1 + i]; j++)
 				if (mx_strcmp(info->argv[j], info->argv[j + 1]) > 0) {
 					temp_str = info->argv[j];
 					temp_id = info->where_what[j];
@@ -19,8 +19,6 @@ void mx_sort_args(t_info *info) {
 					info->argv[j + 1] = temp_str;
 					info->where_what[j + 1] = temp_id;
 				}
-			}
-		}
 	}
 	else
 		mx_sort_args_flag_f(info);

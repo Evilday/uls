@@ -1,9 +1,16 @@
 #include "uls.h"
 
 // Errors
-void mx_invalid_usage() {
+void mx_invalid_usage(char sym) {
+	char *str = malloc(2);
+	str[0] = sym;
+	str[1] = '\0';
+	mx_printerr("uls: illegal option -- ");
+	mx_printerr(str);
+	mx_printerr("\n");
 	mx_printerr(INVALID_USAGE);
 	mx_printerr("\n");
+	free(str);
 }
 
 void mx_arg_not_exist(t_info *info) {
