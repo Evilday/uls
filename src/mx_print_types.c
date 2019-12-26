@@ -15,7 +15,7 @@ void mx_basic_print(t_info *info) {
 			if ((j + num_of_lines - i) % num_of_lines == 0) {
 				mx_choose_print_action(info, tmp);
 				if (sub_r + num_of_lines < info->num_of_sub)
-					basic_tab_print(info, strlen(tmp->data));
+					basic_tab_print(info, mx_strlen(tmp->data));
 			}
 			++sub_r;
 		}

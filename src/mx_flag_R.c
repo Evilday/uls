@@ -4,7 +4,6 @@ static void flag_R_check_folder(t_info *info, char *arg, t_uni_list *check);
 
 void mx_flag_R(t_info *info, char *arg) {
 	t_uni_list *all_inside = NULL;
-
 	mx_push_uni_list_back(info, &(all_inside), ".", 0);
 	mx_look_sub_argv(info, arg, all_inside);
 	mx_pop_uni_list_front(&(all_inside));

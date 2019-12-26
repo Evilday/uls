@@ -11,19 +11,19 @@ t_uni_list *mx_create_uni_list(t_info *info, char *data, int f) {
 	}
 	return new_uni_list;
 }
-void mx_push_uni_list_back(t_info *info, t_uni_list **list, void *data, int f) {
+void mx_push_uni_list_back(t_info *info, t_uni_list **lst, void *data, int f) {
 	t_uni_list *new_uni_list = NULL;
-	t_uni_list *temp = *list;
+	t_uni_list *temp = *lst;
 
-	if (list && (new_uni_list = mx_create_uni_list(info, data, f)) != NULL) {
-		if (*list) {
+	if (lst && (new_uni_list = mx_create_uni_list(info, data, f)) != NULL) {
+		if (*lst) {
 			while (temp->next)
 				temp = temp->next;
 
 			temp->next = new_uni_list;
 		}
 		else
-			*list = new_uni_list;
+			*lst = new_uni_list;
 	}
 	if (malloc_size(data))
 		free(data);

@@ -1,16 +1,8 @@
 #include "uls.h"
 
+static void folder_actions(t_info *info, bool folder);
 static void folder_print(t_info *info);
 static void check_flag_h(t_info *info);
-
-static void folder_actions(t_info *info, bool folder) {
-	if (folder)
-		folder_print(info);
-	else
-		info->first_argv = 0;
-	if (info->flag_h)
-		check_flag_h(info);
-}
 
 void mx_print_tabs(int n) {
 	for (int i = 0; i < n; i++)
@@ -30,12 +22,22 @@ void mx_print_arg(t_info *info, bool folder) {
 				mx_printchar('\n');
 			}
 			mx_print_l(info);
+			
 		}
 		else if (info->print_flag == '1')
 			mx_print_1(info);
 		else if (info->print_flag == 'm')
 			mx_print_semicoma(info);
 	}
+}
+
+static void folder_actions(t_info *info, bool folder) {
+	if (folder)
+		folder_print(info);
+	else
+		info->first_argv = 0;
+	if (info->flag_h)
+		check_flag_h(info);
 }
 
 static void folder_print(t_info *info) {

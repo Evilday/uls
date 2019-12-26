@@ -26,7 +26,7 @@ void mx_take_group_and_size_for_l(t_info *info) {
 }
 
 void mx_count_tabs_l(t_info *info) {
-	t_tabs_l *tabs_l = (t_tabs_l *)malloc(sizeof(t_tabs_l));
+	t_tabs_l *tabs_l = info->tabs_l;
 
 	tabs_l->l_nlink = tabs_l->l_login = tabs_l->l_group_owner
 		= tabs_l->l_size = tabs_l->l_time_upd = 0;
@@ -42,7 +42,6 @@ void mx_count_tabs_l(t_info *info) {
 		if (mx_strlen(tmp->time_upd) > tabs_l->l_time_upd)
 			tabs_l->l_time_upd = mx_strlen(tmp->time_upd);
 	}
-	info->tabs_l = tabs_l;
 	if (info->flag_h)
 		info->tabs_l->l_size++;
 }
@@ -64,12 +63,16 @@ void mx_date_time_for_l(t_info *info) {
 static char *get_login(uid_t st_uid, bool flag_n) {
 	char *user = (char *)malloc(256);
 	struct passwd *pw = getpwuid(st_uid);
+	char *temp;
 
 	if (pw == NULL)
 		user = mx_itoa(st_uid);
 	else {
-		if (flag_n)
-			mx_strcpy(user, mx_itoa(pw->pw_uid));
+		if (flag_n) {
+			temp = mx_itoa(pw->pw_uid);
+			mx_strcpy(user, temp);
+			free(temp);
+		}
 		else
 			mx_strcpy(user, pw->pw_name);
 	}

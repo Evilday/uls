@@ -4,6 +4,9 @@ static void activate_all_flags(t_info *info, bool *our_flags);
 static void take_flags_2(t_info *info, int i, int j, bool *our_flags);
 
 void mx_l_flag(t_info *info) {
+	if (malloc_size(info->tabs_l))
+		free(info->tabs_l);
+	info->tabs_l = (t_tabs_l *)malloc(sizeof(t_tabs_l));
 	info->total_blocks_l = 0;
 	mx_l_permissions(info);
 	mx_take_group_and_size_for_l(info);

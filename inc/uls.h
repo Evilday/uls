@@ -166,7 +166,7 @@ int mx_num_of_cols(t_info *info);
 
 // mx_list
 t_uni_list *mx_create_uni_list(t_info *info, char *data, int f);
-void mx_push_uni_list_back(t_info *info, t_uni_list **list, void *data, int f);
+void mx_push_uni_list_back(t_info *info, t_uni_list **lst, void *data, int f);
 void mx_pop_uni_list_front(t_uni_list **head);
 void mx_swap_uni_list(t_info *info, int x, int y);
 

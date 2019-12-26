@@ -3,6 +3,7 @@
 // Errors
 void mx_invalid_usage(char sym) {
 	char *str = malloc(2);
+
 	str[0] = sym;
 	str[1] = '\0';
 	mx_printerr("uls: illegal option -- ");

@@ -29,8 +29,3 @@ static void check_flag_G(t_info *info, t_uni_list *arg) {
 	else
 		mx_printstr(arg->data);
 }
-
-// / - папка
-// * - файл може бути виконаний
-// | - якщо файл є Fifo
-// @ - для якщо це символічне посилання
