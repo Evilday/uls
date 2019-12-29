@@ -1,13 +1,44 @@
 #include "uls.h"
 
-void mx_invalid_usage() {
-    mx_printerr(INVALID_USAGE);
-    mx_printerr("\n");
+// Errors
+void mx_invalid_usage(char sym) {
+	char *str = malloc(2);
+
+	str[0] = sym;
+	str[1] = '\0';
+	mx_printerr("uls: illegal option -- ");
+	mx_printerr(str);
+	mx_printerr("\n");
+	mx_printerr(INVALID_USAGE);
+	mx_printerr("\n");
+	free(str);
 }
 
-void mx_arg_not_exist(char *arg) {
-    mx_printerr("uls: ");
-    mx_printerr(arg);
-    mx_printerr(": No such file or directory");
-    mx_printerr("\n");
+void mx_arg_not_exist(t_info *info) {
+	bool errors = 0;
+
+	for (int i = 0; i < info->argc; i++)
+		if (!info->where_what[i]) {
+			mx_is_allowed(info->argv[i]);
+			errors = 1;
+		}
+	if (errors && !info->file_exist && !info->folder_exist)
+		exit(1);
+}
+
+void mx_is_allowed(char *path) {
+	char *full_error;
+	char *tmp;
+
+	while (mx_strchr(path, '/') != 0) {
+		path = mx_strchr(path, '/');
+		path++;
+	}
+	full_error = mx_strnew(1);
+	tmp = mx_strjoin(full_error, "uls: ");
+	free(full_error);
+	full_error = mx_strjoin(tmp, path);
+	perror(full_error);
+	free(tmp);
+	free(full_error);
 }

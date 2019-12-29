@@ -2,6 +2,7 @@
 
 char *mx_strstr(const char *haystack, const char *needle) {
 	int symb = mx_strlen(needle);
+	
 	if (!symb)
 		return (char *)haystack;
 	while (*haystack) {

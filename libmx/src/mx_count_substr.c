@@ -6,7 +6,6 @@ int mx_count_substr(const char *str, const char *sub) {
 
 	if (!sub || !str)
 		return -1;
-
 	len = mx_strlen(sub);
 	while (*str) {
 		if (*str == *sub) {

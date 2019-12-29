@@ -3,16 +3,17 @@
 int mx_num_of_cols(t_info *info) {
 	struct winsize w;
 	int max_len = 0;
-	int num_of_cols = 0;
+	int cols = 0;
+	int lines = 0;
 
-	for (int i = 0; i < info->argc; i++)
-		if (max_len < mx_strlen(info->argv[i]))
-			max_len = mx_strlen(info->argv[i]);
-
+	for (t_uni_list *tmp = info->sub_args; tmp; tmp = tmp->next)
+		if (max_len < mx_strlen(tmp->data))
+			max_len = mx_strlen(tmp->data);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	printf("lines %d\n", w.ws_row);
-	printf("columns %d\n", w.ws_col);
-	printf("len = %d\n", max_len + 1);
-	printf("num_of_cols %d\n", w.ws_col / (max_len + 1));
-	return num_of_cols;
+	cols = (w.ws_col / ((8 - (max_len % 8)) + max_len));
+	lines = info->num_of_sub / cols;
+	if (lines == 0 || ((info->num_of_sub % cols) != 0))
+		lines++;
+	info->max_sub_len = max_len;
+	return lines;
 }
